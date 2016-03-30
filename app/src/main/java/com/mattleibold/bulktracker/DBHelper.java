@@ -18,34 +18,36 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "BulkTrackerDB.db";
 
     public static class WeightEntry implements BaseColumns {
-        public static final String WEIGHT_TABLE_NAME = "WeightHistory";
+        public static final String TABLE_NAME = "WeightHistory";
         public static final String ID_COLUMN_NAME = "id";
         public static final String POUNDS_COLUMN_NAME = "Pounds";
         public static final String DATE_COLUMN_NAME = "Date";
         public static final String TIME_COLUMN_NAME = "Time";
         public static final String COMMENT_COLUMN_NAME = "Comment";
         public static final String CREATE_TABLE_SQL =
-                "CREATE TABLE " + WEIGHT_TABLE_NAME + "( " + ID_COLUMN_NAME +
+                "CREATE TABLE " + TABLE_NAME + "( " + ID_COLUMN_NAME +
                         " integer primary key, " + POUNDS_COLUMN_NAME + " real, " +
                         DATE_COLUMN_NAME + " text, " + TIME_COLUMN_NAME + " integer, " +
                         COMMENT_COLUMN_NAME + " text)";
 
         public static final String DROP_TABLE_SQL =
-                "DROP TABLE IF EXISTS " + WEIGHT_TABLE_NAME;
+                "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-        public static final String GET_ALL_SQL = "SELECT * FROM " + WEIGHT_TABLE_NAME +
+        public static final String GET_ALL_SQL = "SELECT * FROM " + TABLE_NAME +
                 " ORDER BY DATE ASC, TIME ASC";
 
         public double weight;
         public String date;
         public int time; // time of day in seconds (between 0 and 60 * 60 * 24)
         public String comment;
+        public int id;
 
         public WeightEntry(double w_in, String d_in, int t_in, String c_in) {
-            weight = w_in;
-            date = d_in;
-            time = t_in;
-            comment = c_in;
+            weight = w_in; date = d_in; time = t_in; comment = c_in;
+        }
+
+        public WeightEntry(double w_in, String d_in, int t_in, String c_in, int id_in) {
+            weight = w_in; date = d_in; time = t_in; comment = c_in; id = id_in;
         }
 
         public String makeTimeString() {
@@ -59,11 +61,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 meridiem = "pm";
             } else if (hours == 12) {
                 meridiem = "pm";
+            } else if (hours == 0) {
+                hours = 12;
             }
-
             return String.valueOf(hours) + ":" + minuteStr + " " + meridiem;
         }
-
     }
 
     public DBHelper(Context context) {
@@ -86,8 +88,14 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(WeightEntry.DATE_COLUMN_NAME, date);
         cv.put(WeightEntry.TIME_COLUMN_NAME, time);
         cv.put(WeightEntry.COMMENT_COLUMN_NAME, comment);
-        long row_id = db.insert(WeightEntry.WEIGHT_TABLE_NAME, null, cv);
+        long row_id = db.insert(WeightEntry.TABLE_NAME, null, cv);
         return row_id != -1;
+    }
+
+    public boolean deleteWeightEntry(int row_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(WeightEntry.TABLE_NAME,
+                WeightEntry.ID_COLUMN_NAME + " = " + row_id, null) > 0;
     }
 
     public ArrayList<WeightEntry> getAllWeights() {
@@ -101,13 +109,11 @@ public class DBHelper extends SQLiteOpenHelper {
             String date = res.getString(res.getColumnIndex(WeightEntry.DATE_COLUMN_NAME));
             int time = res.getInt(res.getColumnIndex(WeightEntry.TIME_COLUMN_NAME));
             String comment = res.getString(res.getColumnIndex(WeightEntry.COMMENT_COLUMN_NAME));
-            WeightEntry entry = new WeightEntry(pounds, date, time, comment);
+            int id = res.getInt(res.getColumnIndex(WeightEntry.ID_COLUMN_NAME));
+            WeightEntry entry = new WeightEntry(pounds, date, time, comment, id);
             weights.add(entry);
             res.moveToNext();
         }
         return weights;
-
     }
-
-
 }

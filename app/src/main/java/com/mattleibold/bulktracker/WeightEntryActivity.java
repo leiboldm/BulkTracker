@@ -65,7 +65,7 @@ public class WeightEntryActivity extends ActionBarActivity {
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
         String date = df.format(calendar.getTime());
         db.insertWeight(pounds, date, time, default_comment);
-        Log.d("BULKTRACKER", "Weight added: " + String.valueOf(pounds));
+        Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
 
         Intent intent = new Intent(this, WeightHistoryActivity.class);
         startActivity(intent);

@@ -13,4 +13,8 @@
     <string name="enter">Enter</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_weight_history">WeightHistoryActivity</string>
+    <string name="delete">delete</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="confirm_delete">Are you sure you want to delete?</string>
 </resources>

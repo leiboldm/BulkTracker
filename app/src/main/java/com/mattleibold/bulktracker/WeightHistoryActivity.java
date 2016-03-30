@@ -1,17 +1,25 @@
 package com.mattleibold.bulktracker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 
-public class WeightHistoryActivity extends ActionBarActivity {
+public class WeightHistoryActivity extends ActionBarActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +52,87 @@ public class WeightHistoryActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        refreshTable();
+    }
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.weightHistoryLayout);
+    public void refreshTable() {
+        TableLayout layout = (TableLayout) findViewById(R.id.weightHistoryTable);
         if (layout.getChildCount() > 0) layout.removeAllViews();
         DBHelper db = new DBHelper(getApplicationContext());
         ArrayList<DBHelper.WeightEntry> weights = db.getAllWeights();
-        Log.d("BULKTRACKER", "weights.size() = " + String.valueOf(weights.size()));
+        Log.d("BTLOG", "weights.size() = " + String.valueOf(weights.size()));
+
+        TableLayout.LayoutParams table_lp = new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.WRAP_CONTENT,
+                TableLayout.LayoutParams.WRAP_CONTENT);
+
+        TableRow.LayoutParams table_row_lp = new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT,
+                TableRow.LayoutParams.WRAP_CONTENT);
+        table_row_lp.setMargins(5, 0, 5, 0);
+
         for (DBHelper.WeightEntry we : weights) {
-            TextView tv = new TextView(this);
-            tv.setText("" + we.weight + " lbs " + we.date + " " + we.makeTimeString());
-            tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            layout.addView(tv);
+            TableRow tr = new TableRow(this);
+
+            TextView weightView = new TextView(this);
+            weightView.setText("" + we.weight + " lbs");
+
+            TextView dateView = new TextView(this);
+            dateView.setText(we.date);
+
+            TextView timeView = new TextView(this);
+            timeView.setText(we.makeTimeString());
+
+            TextView commentView = new TextView(this);
+            commentView.setText(we.comment);
+
+            Button deleteButton = new Button(this);
+            deleteButton.setText(R.string.delete);
+            deleteButton.setId(we.id);
+            deleteButton.setTag("deleteButton");
+            deleteButton.setOnClickListener(this);
+
+            tr.addView(weightView, table_row_lp);
+            tr.addView(dateView, table_row_lp);
+            tr.addView(timeView, table_row_lp);
+            tr.addView(commentView, table_row_lp);
+            tr.addView(deleteButton, table_row_lp);
+            layout.addView(tr, table_lp);
+            Log.d("BTLOG", "Drawing TableRow " + we.weight + " " + we.date);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getTag() == "deleteButton") {
+            AlertDialog confirmDelete = confirmDeleteDialog(view);
+            confirmDelete.show();
+        }
+    }
+
+    public AlertDialog confirmDeleteDialog(final View view) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.delete)
+                .setMessage(R.string.confirm_delete)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface d, int whichButton) {
+                        int id = view.getId();
+                        DBHelper db = new DBHelper(getApplicationContext());
+                        boolean success = db.deleteWeightEntry(id);
+                        if (success) {
+                            ViewGroup table = (ViewGroup) view.getParent().getParent();
+                            ViewGroup table_row = (ViewGroup) view.getParent();
+                            table.removeView(table_row);
+                        }
+                        d.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface d, int whichButton) {
+                        d.dismiss();
+                    }
+                })
+                .create();
+        return dialog;
     }
 }
