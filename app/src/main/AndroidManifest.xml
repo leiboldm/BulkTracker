@@ -28,6 +28,10 @@
             android:name=".WeightHistoryActivity"
             android:label="@string/title_activity_weight_history" >
         </activity>
+        <activity
+            android:name=".GraphViewActivity"
+            android:label="@string/title_activity_graph_view" >
+        </activity>
     </application>
 
 </manifest>

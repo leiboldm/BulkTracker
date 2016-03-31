@@ -47,4 +47,9 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, WeightHistoryActivity.class);
         startActivity(intent);
     }
+
+    public void showGraphViewActivity(View view) {
+        Intent intent = new Intent(this, GraphViewActivity.class);
+        startActivity(intent);
+    }
 }
