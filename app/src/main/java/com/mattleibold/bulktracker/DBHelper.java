@@ -6,8 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
+import android.util.Log;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -65,6 +70,22 @@ public class DBHelper extends SQLiteOpenHelper {
                 hours = 12;
             }
             return String.valueOf(hours) + ":" + minuteStr + " " + meridiem;
+        }
+
+        public int makeTimestamp() {
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                Date parsedDate = formatter.parse(date);
+                int timestamp = (int) (parsedDate.getTime() / 1000);
+                return timestamp + time;
+            } catch (ParseException e) {
+                Log.w("BTLOG", "Parse exception for date string " + date);
+                return -1;
+            }
+        }
+
+        public Date makeDate() {
+            return new Date((long)makeTimestamp() * 1000);
         }
     }
 
