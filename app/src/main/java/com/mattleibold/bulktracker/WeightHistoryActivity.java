@@ -75,7 +75,7 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
             TableRow tr = new TableRow(this);
 
             TextView weightView = new TextView(this);
-            weightView.setText("" + we.weight + " lbs");
+            weightView.setText("" + we.weight + " " + getString(R.string.lbs));
 
             TextView dateView = new TextView(this);
             dateView.setText(we.date);
