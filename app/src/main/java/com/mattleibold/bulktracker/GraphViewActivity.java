@@ -14,7 +14,9 @@ import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
@@ -71,7 +73,23 @@ public class GraphViewActivity extends ActionBarActivity {
             DataPoint dp = new DataPoint(we.makeDate(), we.weight);
             series.appendData(dp, true, maxDataPoints);
         }
-        chart.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+        Calendar startDate = Calendar.getInstance();
+        startDate.setTime(weights.get(0).makeDate());
+        Calendar endDate = Calendar.getInstance();
+        endDate.setTime(weights.get(weights.size() - 1).makeDate());
+        Calendar curDate = Calendar.getInstance();
+        curDate.setTime(new Date());
+        if (endDate.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
+                endDate.get(Calendar.YEAR) == curDate.get(Calendar.YEAR)) {
+            chart.getGridLabelRenderer().setLabelFormatter(
+                    new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("LLL d"))
+            );
+        } else {
+            chart.getGridLabelRenderer().setLabelFormatter(
+                    new DateAsXAxisLabelFormatter(this, new SimpleDateFormat("LLL d, yyyy"))
+            );
+        }
+
         chart.getGridLabelRenderer().setNumHorizontalLabels(3); // only 3 because of the space
 
         // set manual x bounds to have nice steps
