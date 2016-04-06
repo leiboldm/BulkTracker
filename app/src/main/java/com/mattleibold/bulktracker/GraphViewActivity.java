@@ -3,6 +3,7 @@ package com.mattleibold.bulktracker;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -14,13 +15,17 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.exp;
 
 
 public class GraphViewActivity extends ActionBarActivity {
-
-    private GraphView chart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,8 @@ public class GraphViewActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public static final int maxDataPoints = 10000;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -60,26 +67,9 @@ public class GraphViewActivity extends ActionBarActivity {
         DBHelper db = new DBHelper(getApplicationContext());
         ArrayList<DBHelper.WeightEntry> weights = db.getAllWeights();
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
-        LineGraphSeries<DataPoint> movingAverageSeries = new LineGraphSeries<DataPoint>();
-        Queue<Double> movingAverageQueue = new LinkedList<Double>();
-        double total = 0;
-        int movingAverageCount = 0;
-        int movingAveragePeriod = 7;
-        int maxDataPoints = 1000;
         for (DBHelper.WeightEntry we : weights) {
             DataPoint dp = new DataPoint(we.makeDate(), we.weight);
             series.appendData(dp, true, maxDataPoints);
-            movingAverageQueue.add(we.weight);
-            if (movingAverageQueue.size() > movingAveragePeriod) {
-                double oldest = movingAverageQueue.remove();
-                total = total - oldest + we.weight;
-            } else {
-                total += we.weight;
-                movingAverageCount += 1;
-            }
-            double smoothedPoint = total / movingAverageCount;
-            DataPoint smoothDP = new DataPoint(we.makeDate(), smoothedPoint);
-            movingAverageSeries.appendData(smoothDP, true, maxDataPoints);
         }
         chart.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
         chart.getGridLabelRenderer().setNumHorizontalLabels(3); // only 3 because of the space
@@ -90,10 +80,67 @@ public class GraphViewActivity extends ActionBarActivity {
         chart.getViewport().setXAxisBoundsManual(true);
         series.setTitle(getString(R.string.raw_data));
         chart.addSeries(series);
-        movingAverageSeries.setColor(Color.RED);
-        movingAverageSeries.setTitle(getString(R.string.smoothed_data));
-        chart.addSeries(movingAverageSeries);
+
+        LineGraphSeries<DataPoint> locallyWeightedRegressionSeries = createFilteredSeries(weights);
+        locallyWeightedRegressionSeries.setColor(Color.RED);
+        locallyWeightedRegressionSeries.setTitle(getString(R.string.smoothed_data));
+        chart.addSeries(locallyWeightedRegressionSeries);
         chart.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
         chart.getLegendRenderer().setVisible(true);
+    }
+
+    private class TimeDiffWE {
+        public long diff;
+        public DBHelper.WeightEntry we;
+        public TimeDiffWE (long diff_in, DBHelper.WeightEntry we_in) {
+            diff = diff_in;
+            we = we_in;
+        }
+    }
+
+    // computes a locally weighted, kNN regression for the raw weight data
+    private LineGraphSeries<DataPoint> createFilteredSeries(ArrayList<DBHelper.WeightEntry> weights) {
+        LineGraphSeries<DataPoint> filteredSeries = new LineGraphSeries<DataPoint>();
+        // find 7 nearest weights and create average weight
+        // add to series
+        Date startDate = weights.get(0).makeDate();
+        Date endDate = weights.get(weights.size() - 1).makeDate();
+        // add one day to endDate to forecast one day ahead of last measurement
+        endDate.setTime(endDate.getTime() + 1000 * 24 * 60 * 60);
+        int period = 7;
+        for (Date iDate = new Date(startDate.getTime());
+             iDate.before(endDate);
+             iDate.setTime(iDate.getTime() + 24 * 60 * 60 * 1000)) {
+
+            // find 7 nearest dates and store them in nearestNeighbors
+            PriorityQueue<TimeDiffWE> nearestNeighbors = new PriorityQueue<TimeDiffWE>(period, new Comparator<TimeDiffWE>() {
+                public int compare(TimeDiffWE a, TimeDiffWE b) {
+                    if (a.diff < b.diff) return 1;
+                    else if (a.diff == b.diff) return 0;
+                    else return -1;
+                }
+            });
+            for (DBHelper.WeightEntry we : weights) {
+                long timeDiff = abs(we.makeDate().getTime() - iDate.getTime());
+                if (nearestNeighbors.size() < period){
+                    nearestNeighbors.add(new TimeDiffWE(timeDiff, we));
+                } else if (timeDiff < nearestNeighbors.peek().diff) {
+                    nearestNeighbors.poll();
+                    nearestNeighbors.add(new TimeDiffWE(timeDiff, we));
+                }
+            }
+            double averageWeight = 0;
+            double totalNormalizationFactor = 0;
+            while (!nearestNeighbors.isEmpty()) {
+                TimeDiffWE i = nearestNeighbors.poll();
+                double tau = ((double)i.diff) / (24 * 1000 * 60 * 60 * period);
+                double normalizationFactor = exp(0.0 - tau);
+                averageWeight += (i.we.weight * normalizationFactor);
+                totalNormalizationFactor += normalizationFactor;
+            }
+            averageWeight = averageWeight / totalNormalizationFactor;
+            filteredSeries.appendData(new DataPoint(iDate, averageWeight), true, maxDataPoints);
+        }
+        return filteredSeries;
     }
 }
