@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -34,10 +35,6 @@ public class GraphViewActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_view);
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.containsKey("ToastMessage")) {
-            Toast.makeText(this, extras.getString("ToastMessage"), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

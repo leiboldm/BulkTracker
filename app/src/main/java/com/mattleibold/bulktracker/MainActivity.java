@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,8 +55,11 @@ public class MainActivity extends ActionBarActivity {
                 Utilities.getSecondsSinceStartOfDay(), default_comment);
         Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
 
+        Toast toast = Toast.makeText(this, getString(R.string.weight_added), Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.show();
+
         Intent intent = new Intent(this, GraphViewActivity.class);
-        intent.putExtra("ToastMessage", "Weight added");
         startActivity(intent);
     }
 
