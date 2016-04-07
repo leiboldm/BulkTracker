@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -33,6 +34,10 @@ public class GraphViewActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_view);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey("ToastMessage")) {
+            Toast.makeText(this, extras.getString("ToastMessage"), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -62,7 +67,10 @@ public class GraphViewActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        drawChart();
+    }
 
+    private void drawChart() {
         GraphView chart = new GraphView(this);
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.graphViewMainLayout);
         mainLayout.addView(chart);

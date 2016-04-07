@@ -7,7 +7,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -51,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
         Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
 
         Intent intent = new Intent(this, GraphViewActivity.class);
+        intent.putExtra("ToastMessage", "Weight added");
         startActivity(intent);
     }
 
