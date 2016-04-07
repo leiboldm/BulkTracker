@@ -3,9 +3,11 @@ package com.mattleibold.bulktracker;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -36,6 +38,20 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void logWeight(View view) {
+        DBHelper db = new DBHelper(getApplicationContext());
+        String default_comment = "";
+        EditText et = (EditText) findViewById(R.id.weightValue);
+        double pounds = Double.parseDouble(et.getText().toString());
+
+        db.insertWeight(pounds, Utilities.getCurrentDateString(),
+                Utilities.getSecondsSinceStartOfDay(), default_comment);
+        Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
+
+        Intent intent = new Intent(this, GraphViewActivity.class);
+        startActivity(intent);
     }
 
     public void showWeightEntryActivity(View view) {

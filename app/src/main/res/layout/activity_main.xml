@@ -11,8 +11,12 @@
         android:layout_height="wrap_content" android:gravity="center"
         android:textSize="40sp"/>
 
+    <EditText android:inputType="numberDecimal" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:hint="@string/weight_hint"
+        android:id="@+id/weightValue" />
+
     <Button android:text="@string/add_weight" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:onClick="showWeightEntryActivity"/>
+        android:layout_height="wrap_content" android:onClick="logWeight"/>
 
     <Button android:text="@string/view_history" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:onClick="showWeightHistoryActivity"/>

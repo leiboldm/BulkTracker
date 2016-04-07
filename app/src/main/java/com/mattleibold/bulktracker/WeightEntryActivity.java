@@ -66,16 +66,8 @@ public class WeightEntryActivity extends ActionBarActivity {
         EditText et = (EditText) findViewById(R.id.weightValue);
         double pounds = Double.parseDouble(et.getText().toString());
 
-        Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
-        Date now = new Date();
-        calendar.setTime(now);
-        int time = calendar.get(Calendar.HOUR_OF_DAY) * 60 * 60;
-        time += calendar.get(Calendar.MINUTE) * 60;
-        time += calendar.get(Calendar.SECOND);
-
-        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-        String date = df.format(calendar.getTime());
-        db.insertWeight(pounds, date, time, default_comment);
+        db.insertWeight(pounds, Utilities.getCurrentDateString(),
+                Utilities.getSecondsSinceStartOfDay(), default_comment);
         Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
 
         Intent intent = new Intent(this, WeightHistoryActivity.class);
