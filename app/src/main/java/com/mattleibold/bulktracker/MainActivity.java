@@ -58,6 +58,7 @@ public class MainActivity extends ActionBarActivity {
         Toast toast = Toast.makeText(this, getString(R.string.weight_added), Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.TOP, 0, 0);
         toast.show();
+        et.setText("");
 
         Intent intent = new Intent(this, GraphViewActivity.class);
         startActivity(intent);
