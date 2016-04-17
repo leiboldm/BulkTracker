@@ -8,7 +8,7 @@
     <string name="weight_added">Weight added</string>
     <string name="action_settings">Settings</string>
 
-    <string name="title_activity_weight_entry">WeightEntryActivity</string>
+    <string name="title_activity_weight_entry">Enter a new weight</string>
     <string name="enter_weight">Enter weight</string>
     <string name="set_time_of_weight">Set time for this weight</string>
     <string name="lbs">lbs</string>
@@ -16,13 +16,13 @@
     <string name="weight_hint">Type weight here</string>
     <string name="enter">Enter</string>
 
-    <string name="title_activity_weight_history">WeightHistoryActivity</string>
+    <string name="title_activity_weight_history">Weight history</string>
     <string name="delete">delete</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
     <string name="confirm_delete">Are you sure you want to delete?</string>
 
-    <string name="title_activity_graph_view">GraphViewActivity</string>
+    <string name="title_activity_graph_view">Weight history chart</string>
     <string name="raw_data">Raw data</string>
     <string name="smoothed_data">Smoothed data</string>
 </resources>
