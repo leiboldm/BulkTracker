@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mattleibold.bulktracker" >
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -32,6 +33,17 @@
             android:name=".GraphViewActivity"
             android:label="@string/title_activity_graph_view" >
         </activity>
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
+
+        <service
+            android:name=".NotificationService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

@@ -41,6 +41,9 @@ public class DBHelper extends SQLiteOpenHelper {
         public static final String GET_ALL_SQL = "SELECT * FROM " + TABLE_NAME +
                 " ORDER BY DATE ASC, TIME ASC";
 
+        public static final String GET_MOST_RECENT_SQL = "SELECT * FROM " + TABLE_NAME +
+                " ORDER BY DATE DESC, TIME DESC LIMIT 1";
+
         public double weight;
         public String date;
         public int time; // time of day in seconds (between 0 and 60 * 60 * 24)
@@ -119,22 +122,30 @@ public class DBHelper extends SQLiteOpenHelper {
                 WeightEntry.ID_COLUMN_NAME + " = " + row_id, null) > 0;
     }
 
+    public WeightEntry getMostRecentWeight() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(WeightEntry.GET_MOST_RECENT_SQL, null);
+        return makeWeight(res);
+    }
+
     public ArrayList<WeightEntry> getAllWeights() {
         ArrayList<WeightEntry> weights = new ArrayList<WeightEntry>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(WeightEntry.GET_ALL_SQL, null);
         res.moveToFirst();
-
         while (!res.isAfterLast()) {
-            double pounds = res.getDouble(res.getColumnIndex(WeightEntry.POUNDS_COLUMN_NAME));
-            String date = res.getString(res.getColumnIndex(WeightEntry.DATE_COLUMN_NAME));
-            int time = res.getInt(res.getColumnIndex(WeightEntry.TIME_COLUMN_NAME));
-            String comment = res.getString(res.getColumnIndex(WeightEntry.COMMENT_COLUMN_NAME));
-            int id = res.getInt(res.getColumnIndex(WeightEntry.ID_COLUMN_NAME));
-            WeightEntry entry = new WeightEntry(pounds, date, time, comment, id);
-            weights.add(entry);
+            weights.add(makeWeight(res));
             res.moveToNext();
         }
         return weights;
+    }
+
+    private WeightEntry makeWeight(Cursor res) {
+        double pounds = res.getDouble(res.getColumnIndex(WeightEntry.POUNDS_COLUMN_NAME));
+        String date = res.getString(res.getColumnIndex(WeightEntry.DATE_COLUMN_NAME));
+        int time = res.getInt(res.getColumnIndex(WeightEntry.TIME_COLUMN_NAME));
+        String comment = res.getString(res.getColumnIndex(WeightEntry.COMMENT_COLUMN_NAME));
+        int id = res.getInt(res.getColumnIndex(WeightEntry.ID_COLUMN_NAME));
+        return new WeightEntry(pounds, date, time, comment, id);
     }
 }
