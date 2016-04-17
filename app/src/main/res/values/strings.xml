@@ -7,7 +7,7 @@
     <string name="view_graph">View graph</string>
     <string name="weight_added">Weight added</string>
     <string name="reminder_notification_title">Log your weight</string>
-    <string name="reminder_notification_text">Get on the scale you bum</string>
+    <string name="reminder_notification_text">You haven\'t entered a weight yet today. Get on the scale you bum.</string>
     <string name="action_settings">Settings</string>
 
     <string name="title_activity_weight_entry">Enter a new weight</string>

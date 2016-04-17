@@ -30,8 +30,8 @@ public class MainActivity extends ActionBarActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         AlarmManager alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmMgr.setInexactRepeating(AlarmManager.RTC,
-                System.currentTimeMillis() + 10000,
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+                System.currentTimeMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     @Override

@@ -122,12 +122,22 @@ public class DBHelper extends SQLiteOpenHelper {
                 WeightEntry.ID_COLUMN_NAME + " = " + row_id, null) > 0;
     }
 
+    // returns the number of weights the user has entered
+    public int getWeightsCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(WeightEntry.GET_MOST_RECENT_SQL, null);
+        return res.getCount();
+    }
+
+    // returns the most recent weight the user has entered
     public WeightEntry getMostRecentWeight() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(WeightEntry.GET_MOST_RECENT_SQL, null);
+        res.moveToFirst();
         return makeWeight(res);
     }
 
+    // returns a list of all the weights the user has entered
     public ArrayList<WeightEntry> getAllWeights() {
         ArrayList<WeightEntry> weights = new ArrayList<WeightEntry>();
         SQLiteDatabase db = this.getReadableDatabase();
