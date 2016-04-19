@@ -130,7 +130,7 @@ public class GraphViewActivity extends ActionBarActivity {
         Date endDate = weights.get(weights.size() - 1).makeDate();
         // add one day to endDate to forecast one day ahead of last measurement
         endDate.setTime(endDate.getTime() + 1000 * 24 * 60 * 60);
-        int period = 7;
+        int period = 14; // days
         for (Date iDate = new Date(startDate.getTime());
              iDate.before(endDate);
              iDate.setTime(iDate.getTime() + 24 * 60 * 60 * 1000)) {
