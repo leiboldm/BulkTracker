@@ -131,8 +131,7 @@ public class GraphViewActivity extends ActionBarActivity {
         // add one day to endDate to forecast one day ahead of last measurement
         endDate.setTime(endDate.getTime() + 1000 * 24 * 60 * 60);
         // period parameter for locally weighted regression, larger period = smoother graph
-        // measured in days
-        int period = 14;
+        int period = 3; // days
         // milliseconds between data points, default is one day
         long interval = 24 * 60 * 60 * 60 * 1000; // milliseconds between data points, default is one day
         interval = (endDate.getTime() - startDate.getTime()) / 50;
@@ -140,30 +139,13 @@ public class GraphViewActivity extends ActionBarActivity {
              iDate.before(endDate);
              iDate.setTime(iDate.getTime() + interval)) {
 
-            // find 7 nearest dates and store them in nearestNeighbors
-            PriorityQueue<TimeDiffWE> nearestNeighbors = new PriorityQueue<TimeDiffWE>(period, new Comparator<TimeDiffWE>() {
-                public int compare(TimeDiffWE a, TimeDiffWE b) {
-                    if (a.diff < b.diff) return 1;
-                    else if (a.diff == b.diff) return 0;
-                    else return -1;
-                }
-            });
-            for (DBHelper.WeightEntry we : weights) {
-                long timeDiff = abs(we.makeDate().getTime() - iDate.getTime());
-                if (nearestNeighbors.size() < period){
-                    nearestNeighbors.add(new TimeDiffWE(timeDiff, we));
-                } else if (timeDiff < nearestNeighbors.peek().diff) {
-                    nearestNeighbors.poll();
-                    nearestNeighbors.add(new TimeDiffWE(timeDiff, we));
-                }
-            }
             double averageWeight = 0;
             double totalNormalizationFactor = 0;
-            while (!nearestNeighbors.isEmpty()) {
-                TimeDiffWE i = nearestNeighbors.poll();
-                double tau = ((double)i.diff) / (24 * 1000 * 60 * 60 * period);
+            for (DBHelper.WeightEntry we : weights) {
+                long time_diff = abs(we.makeDate().getTime() - iDate.getTime());
+                double tau = ((double)time_diff) / (24 * 1000 * 60 * 60 * period);
                 double normalizationFactor = exp(0.0 - tau);
-                averageWeight += (i.we.weight * normalizationFactor);
+                averageWeight += (we.weight * normalizationFactor);
                 totalNormalizationFactor += normalizationFactor;
             }
             averageWeight = averageWeight / totalNormalizationFactor;
