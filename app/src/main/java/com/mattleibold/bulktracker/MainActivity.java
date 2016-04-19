@@ -27,7 +27,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent,
+                PendingIntent.FLAG_NO_CREATE);
         AlarmManager alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmMgr.setInexactRepeating(AlarmManager.RTC,
                 System.currentTimeMillis(),
