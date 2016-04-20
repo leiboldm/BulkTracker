@@ -20,8 +20,8 @@
     <string name="add_comment">Add comment</string>
     <string name="comment_hint">Type any comments here</string>
     <string name="date_selected">Date:</string>
-    <string name="pick_date">Pick different date</string>
-    <string name="pick_time">Pick different time</string>
+    <string name="pick_date">Change date</string>
+    <string name="pick_time">Change time</string>
 
     <string name="title_activity_weight_history">Weight history</string>
     <string name="delete">delete</string>
