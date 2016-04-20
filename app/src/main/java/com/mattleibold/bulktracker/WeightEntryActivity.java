@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,23 @@ public class WeightEntryActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_entry);
+
+        TextView dateView = (TextView) findViewById(R.id.dateValue);
+        String currentDateString = Utilities.getCurrentDateString() + " " +
+                Utilities.getCurrentTimeString();
+        dateView.setText(currentDateString);
+        Log.d("BTLOG", currentDateString);
+
+        String passedWeight = "";
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null) {
+                passedWeight = extras.getString("weightValue");
+            }
+        }
+
+        EditText weightEntry = (EditText) findViewById(R.id.weightValue);
+        weightEntry.setText(passedWeight);
     }
 
     @Override
@@ -72,5 +90,13 @@ public class WeightEntryActivity extends ActionBarActivity {
 
         Intent intent = new Intent(this, WeightHistoryActivity.class);
         startActivity(intent);
+    }
+
+    public void showTimePickerDialog(View v) {
+
+    }
+
+    public void showDatePickerDialog(View v) {
+
     }
 }
