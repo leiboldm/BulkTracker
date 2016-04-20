@@ -13,14 +13,47 @@
 
     <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
         android:orientation="horizontal">
-
         <EditText android:inputType="numberDecimal" android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:hint="@string/weight_hint"
             android:id="@+id/weightValue" />
         <TextView android:text="@string/lbs" android:layout_width="wrap_content"
             android:layout_height="match_parent" android:gravity="center_vertical"/>
-
     </LinearLayout>
+
+    <TextView android:text="@string/add_comment" android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
+        android:orientation="horizontal">
+        <EditText android:inputType="text" android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:hint="@string/comment_hint"
+            android:id="@+id/commentValue" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
+        android:orientation="horizontal">
+        <TextView android:text="@string/date_selected" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"/>
+        <TextView android:text="" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/dateValue"/>
+    </LinearLayout>
+
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_date"
+            android:onClick="showDatePickerDialog" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_time"
+            android:onClick="showTimePickerDialog" />
+    </LinearLayout>
+
+
 
     <Button android:text="@string/enter" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:onClick="logWeight" />

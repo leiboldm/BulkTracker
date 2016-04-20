@@ -17,6 +17,11 @@
     <string name="kgs">kgs</string>
     <string name="weight_hint">Type weight here</string>
     <string name="enter">Enter</string>
+    <string name="add_comment">Add comment</string>
+    <string name="comment_hint">Type any comments here</string>
+    <string name="date_selected">Date:</string>
+    <string name="pick_date">Pick different date</string>
+    <string name="pick_time">Pick different time</string>
 
     <string name="title_activity_weight_history">Weight history</string>
     <string name="delete">delete</string>

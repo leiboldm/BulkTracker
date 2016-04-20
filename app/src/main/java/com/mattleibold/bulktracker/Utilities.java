@@ -11,6 +11,15 @@ import java.util.TimeZone;
  * Created by Matt on 4/6/2016.
  */
 public class Utilities {
+    public static String getCurrentTimeString() {
+        Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
+        Date now = new Date();
+        calendar.setTime(now);
+        DateFormat df = new SimpleDateFormat("KK:mm:ss a");
+        String time = df.format(calendar.getTime());
+        return time;
+    }
+
     public static int getSecondsSinceStartOfDay() {
         Calendar calendar = new GregorianCalendar(TimeZone.getDefault());
         Date now = new Date();

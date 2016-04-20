@@ -78,6 +78,9 @@ public class MainActivity extends ActionBarActivity {
 
     public void showWeightEntryActivity(View view) {
         Intent intent = new Intent(this, WeightEntryActivity.class);
+        EditText weightET = (EditText) findViewById(R.id.weightValue);
+        String weightString = weightET.getText().toString();
+        intent.putExtra("weightValue", weightString);
         startActivity(intent);
     }
 
