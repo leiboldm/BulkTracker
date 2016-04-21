@@ -131,22 +131,27 @@ public class GraphViewActivity extends ActionBarActivity {
             DBHelper.WeightEntry curMax = weights.get(0);
             for (DBHelper.WeightEntry we : weights) {
                 if (!we.date.equals(curDate)) {
-                    dailyMinMaxWeights.add(curMin);
-                    dailyMinMaxWeights.add(curMax);
+                    double avgWeight = (curMin.weight + curMax.weight) / 2.0;
+                    int avgTime = (curMin.time + curMax.time) / 2;
+                    DBHelper.WeightEntry averageWeightEntry = new DBHelper.WeightEntry(avgWeight,
+                            curMin.date,  avgTime, "");
+                    dailyMinMaxWeights.add(averageWeightEntry);
                     curDate = we.date;
                     curMin = we;
                     curMax = we;
                 } else {
                     if (we.weight > curMax.weight) {
                         curMax = we;
-                    }
-                    if (we.weight < curMin.weight) {
+                    } else if (we.weight < curMin.weight) {
                         curMin = we;
                     }
                 }
             }
-            dailyMinMaxWeights.add(curMin);
-            dailyMinMaxWeights.add(curMax);
+            double avgWeight = (curMin.weight + curMax.weight) / 2.0;
+            int avgTime = (curMin.time + curMax.time) / 2;
+            DBHelper.WeightEntry averageWeightEntry = new DBHelper.WeightEntry(avgWeight,
+                    curMin.date,  avgTime, "");
+            dailyMinMaxWeights.add(averageWeightEntry);
         } else {
             return filteredSeries;
         }
