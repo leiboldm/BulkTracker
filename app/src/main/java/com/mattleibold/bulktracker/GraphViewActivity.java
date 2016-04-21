@@ -129,8 +129,9 @@ public class GraphViewActivity extends ActionBarActivity {
             String curDate = weights.get(0).date;
             DBHelper.WeightEntry curMin = weights.get(0);
             DBHelper.WeightEntry curMax = weights.get(0);
-            for (DBHelper.WeightEntry we : weights) {
-                if (!we.date.equals(curDate)) {
+            for (int i = 0; i < weights.size(); i++) {
+                DBHelper.WeightEntry we = weights.get(i);
+                if (!we.date.equals(curDate) || (i == weights.size() - 1)) {
                     double avgWeight = (curMin.weight + curMax.weight) / 2.0;
                     int avgTime = (curMin.time + curMax.time) / 2;
                     DBHelper.WeightEntry averageWeightEntry = new DBHelper.WeightEntry(avgWeight,
@@ -147,17 +148,10 @@ public class GraphViewActivity extends ActionBarActivity {
                     }
                 }
             }
-            double avgWeight = (curMin.weight + curMax.weight) / 2.0;
-            int avgTime = (curMin.time + curMax.time) / 2;
-            DBHelper.WeightEntry averageWeightEntry = new DBHelper.WeightEntry(avgWeight,
-                    curMin.date,  avgTime, "");
-            dailyMinMaxWeights.add(averageWeightEntry);
         } else {
             return filteredSeries;
         }
 
-        Log.d("BTLOG", "dailyMinMaxWeights.size() = " + dailyMinMaxWeights.size());
-        Log.d("BTLOG", "weights.size() = " + weights.size());
         Date startDate = dailyMinMaxWeights.get(0).makeDate();
         Date endDate = dailyMinMaxWeights.get(dailyMinMaxWeights.size() - 1).makeDate();
         // add one day to endDate to forecast one day ahead of last measurement
