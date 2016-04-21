@@ -124,10 +124,37 @@ public class GraphViewActivity extends ActionBarActivity {
     // computes a locally weighted, kNN regression for the raw weight data
     private LineGraphSeries<DataPoint> createFilteredSeries(ArrayList<DBHelper.WeightEntry> weights) {
         LineGraphSeries<DataPoint> filteredSeries = new LineGraphSeries<DataPoint>();
-        // find 7 nearest weights and create average weight
-        // add to series
-        Date startDate = weights.get(0).makeDate();
-        Date endDate = weights.get(weights.size() - 1).makeDate();
+        ArrayList<DBHelper.WeightEntry> dailyMinMaxWeights = new ArrayList<DBHelper.WeightEntry>();
+        if (weights.size() > 0) {
+            String curDate = weights.get(0).date;
+            DBHelper.WeightEntry curMin = weights.get(0);
+            DBHelper.WeightEntry curMax = weights.get(0);
+            for (DBHelper.WeightEntry we : weights) {
+                if (!we.date.equals(curDate)) {
+                    dailyMinMaxWeights.add(curMin);
+                    dailyMinMaxWeights.add(curMax);
+                    curDate = we.date;
+                    curMin = we;
+                    curMax = we;
+                } else {
+                    if (we.weight > curMax.weight) {
+                        curMax = we;
+                    }
+                    if (we.weight < curMin.weight) {
+                        curMin = we;
+                    }
+                }
+            }
+            dailyMinMaxWeights.add(curMin);
+            dailyMinMaxWeights.add(curMax);
+        } else {
+            return filteredSeries;
+        }
+
+        Log.d("BTLOG", "dailyMinMaxWeights.size() = " + dailyMinMaxWeights.size());
+        Log.d("BTLOG", "weights.size() = " + weights.size());
+        Date startDate = dailyMinMaxWeights.get(0).makeDate();
+        Date endDate = dailyMinMaxWeights.get(dailyMinMaxWeights.size() - 1).makeDate();
         // add one day to endDate to forecast one day ahead of last measurement
         endDate.setTime(endDate.getTime() + 1000 * 24 * 60 * 60);
         // period parameter for locally weighted regression, larger period = smoother graph
@@ -141,7 +168,7 @@ public class GraphViewActivity extends ActionBarActivity {
 
             double averageWeight = 0;
             double totalNormalizationFactor = 0;
-            for (DBHelper.WeightEntry we : weights) {
+            for (DBHelper.WeightEntry we : dailyMinMaxWeights) {
                 long time_diff = abs(we.makeDate().getTime() - iDate.getTime());
                 double tau = ((double)time_diff) / (24 * 1000 * 60 * 60 * period);
                 double normalizationFactor = exp(0.0 - tau);
