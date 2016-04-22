@@ -121,7 +121,17 @@ public class GraphViewActivity extends ActionBarActivity {
         }
     }
 
-    // computes a locally weighted, kNN regression for the raw weight data
+    // helper method for createFilteredSeries()
+    private void addAveragePoint(DBHelper.WeightEntry minPoint,DBHelper.WeightEntry maxPoint,
+                                 ArrayList<DBHelper.WeightEntry> array) {
+        double avgWeight = (minPoint.weight + maxPoint.weight) / 2.0;
+        int avgTime = (minPoint.time + maxPoint.time) / 2;
+        DBHelper.WeightEntry averageWeightEntry = new DBHelper.WeightEntry(avgWeight,
+                minPoint.date,  avgTime, "");
+        array.add(averageWeightEntry);
+    }
+
+    // computes a locally weighted regression for the raw weight data
     private LineGraphSeries<DataPoint> createFilteredSeries(ArrayList<DBHelper.WeightEntry> weights) {
         LineGraphSeries<DataPoint> filteredSeries = new LineGraphSeries<DataPoint>();
         ArrayList<DBHelper.WeightEntry> dailyMinMaxWeights = new ArrayList<DBHelper.WeightEntry>();
@@ -131,12 +141,8 @@ public class GraphViewActivity extends ActionBarActivity {
             DBHelper.WeightEntry curMax = weights.get(0);
             for (int i = 0; i < weights.size(); i++) {
                 DBHelper.WeightEntry we = weights.get(i);
-                if (!we.date.equals(curDate) || (i == weights.size() - 1)) {
-                    double avgWeight = (curMin.weight + curMax.weight) / 2.0;
-                    int avgTime = (curMin.time + curMax.time) / 2;
-                    DBHelper.WeightEntry averageWeightEntry = new DBHelper.WeightEntry(avgWeight,
-                            curMin.date,  avgTime, "");
-                    dailyMinMaxWeights.add(averageWeightEntry);
+                if (!we.date.equals(curDate)) {
+                    addAveragePoint(curMin, curMax, dailyMinMaxWeights);
                     curDate = we.date;
                     curMin = we;
                     curMax = we;
@@ -148,12 +154,13 @@ public class GraphViewActivity extends ActionBarActivity {
                     }
                 }
             }
+            addAveragePoint(curMin, curMax, dailyMinMaxWeights);
         } else {
             return filteredSeries;
         }
 
-        Date startDate = dailyMinMaxWeights.get(0).makeDate();
-        Date endDate = dailyMinMaxWeights.get(dailyMinMaxWeights.size() - 1).makeDate();
+        Date startDate = weights.get(0).makeDate();
+        Date endDate = weights.get(weights.size() - 1).makeDate();
         // add one day to endDate to forecast one day ahead of last measurement
         endDate.setTime(endDate.getTime() + 1000 * 24 * 60 * 60);
         // period parameter for locally weighted regression, larger period = smoother graph
