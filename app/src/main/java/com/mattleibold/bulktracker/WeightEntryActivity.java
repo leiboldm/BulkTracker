@@ -82,7 +82,13 @@ public class WeightEntryActivity extends ActionBarActivity {
         DBHelper db = new DBHelper(getApplicationContext());
         String default_comment = "";
         EditText et = (EditText) findViewById(R.id.weightValue);
-        double pounds = Double.parseDouble(et.getText().toString());
+        double pounds = 0.0;
+        try {
+            pounds = Double.parseDouble(et.getText().toString());
+        } catch (Throwable e) {
+            // do nothing if the weight entered is empty or otherwise an invalid number
+            return;
+        }
 
         db.insertWeight(pounds, Utilities.getCurrentDateString(),
                 Utilities.getSecondsSinceStartOfDay(), default_comment);
