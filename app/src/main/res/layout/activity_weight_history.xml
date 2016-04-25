@@ -25,9 +25,9 @@
             <TextView android:text="Weight"></TextView>
             <TextView android:text="Date"></TextView>
             <TextView android:text="Time"></TextView>
-            <TextView android:text="Comment"></TextView>
             <TextView android:text="Edit"></TextView>
         </TableRow>
+        <TextView android:text="Comment"></TextView>
 
     </TableLayout>
     </ScrollView>

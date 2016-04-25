@@ -72,8 +72,6 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
         table_row_lp.setMargins(5, 0, 5, 0);
 
         for (DBHelper.WeightEntry we : weights) {
-            TableRow tr = new TableRow(this);
-
             TextView weightView = new TextView(this);
             weightView.setText("" + we.weight + " " + getString(R.string.lbs));
 
@@ -92,12 +90,14 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
             deleteButton.setTag("deleteButton");
             deleteButton.setOnClickListener(this);
 
+            TableRow tr = new TableRow(this);
             tr.addView(weightView, table_row_lp);
             tr.addView(dateView, table_row_lp);
             tr.addView(timeView, table_row_lp);
-            tr.addView(commentView, table_row_lp);
             tr.addView(deleteButton, table_row_lp);
+
             layout.addView(tr, table_lp);
+            layout.addView(commentView, table_lp);
             Log.d("BTLOG", "Drawing TableRow " + we.weight + " " + we.date);
         }
     }
@@ -120,9 +120,7 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
                         DBHelper db = new DBHelper(getApplicationContext());
                         boolean success = db.deleteWeightEntry(id);
                         if (success) {
-                            ViewGroup table = (ViewGroup) view.getParent().getParent();
-                            ViewGroup table_row = (ViewGroup) view.getParent();
-                            table.removeView(table_row);
+                            refreshTable();
                         }
                         d.dismiss();
                     }
