@@ -76,9 +76,9 @@ public class WeightEntryActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        EditText weightET = (EditText) findViewById(R.id.weightValue);
-        weightET.requestFocus();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        //EditText weightET = (EditText) findViewById(R.id.weightValue);
+        //weightET.requestFocus();
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     public void logWeight(View view) {
