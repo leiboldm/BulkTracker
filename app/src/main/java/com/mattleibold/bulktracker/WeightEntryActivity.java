@@ -83,7 +83,6 @@ public class WeightEntryActivity extends FragmentActivity {
 
     public void logWeight(View view) {
         DBHelper db = new DBHelper(getApplicationContext());
-        String default_comment = "";
         EditText et = (EditText) findViewById(R.id.weightValue);
         double pounds = 0.0;
         try {
@@ -93,8 +92,10 @@ public class WeightEntryActivity extends FragmentActivity {
             return;
         }
 
-        db.insertWeight(pounds, Utilities.getCurrentDateString(),
-                Utilities.getSecondsSinceStartOfDay(), default_comment);
+        EditText commentET = (EditText) findViewById(R.id.commentValue);
+        String comment = commentET.getText().toString();
+
+        db.insertWeight(pounds, date, time, comment);
         Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
 
         Intent intent = new Intent(this, WeightHistoryActivity.class);
