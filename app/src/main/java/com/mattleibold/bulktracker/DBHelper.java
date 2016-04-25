@@ -59,20 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         public String makeTimeString() {
-            int hours = time / 3600;
-            int minutes = (time - (hours * 3600)) / 60;
-            String minuteStr = String.valueOf(minutes);
-            if (minuteStr.length() < 2) minuteStr = "0" + minuteStr;
-            String meridiem = "am";
-            if (hours > 12) {
-                hours -= 12;
-                meridiem = "pm";
-            } else if (hours == 12) {
-                meridiem = "pm";
-            } else if (hours == 0) {
-                hours = 12;
-            }
-            return String.valueOf(hours) + ":" + minuteStr + " " + meridiem;
+            return Utilities.secondsToTimeString(time);
         }
 
         public int makeTimestamp() {

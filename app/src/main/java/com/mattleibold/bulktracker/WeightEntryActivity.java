@@ -1,7 +1,9 @@
 package com.mattleibold.bulktracker;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.Time;
@@ -23,18 +25,19 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 
-public class WeightEntryActivity extends ActionBarActivity {
+public class WeightEntryActivity extends FragmentActivity {
+
+    private String date;
+    private int time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_entry);
 
-        TextView dateView = (TextView) findViewById(R.id.dateValue);
-        String currentDateString = Utilities.getCurrentDateString() + " " +
-                Utilities.getCurrentTimeString();
-        dateView.setText(currentDateString);
-        Log.d("BTLOG", currentDateString);
+        date = Utilities.getCurrentDateString();
+        time = Utilities.getSecondsSinceStartOfDay();
+        setDateTimeView();
 
         String passedWeight = "";
         if (savedInstanceState == null) {
@@ -99,10 +102,31 @@ public class WeightEntryActivity extends ActionBarActivity {
     }
 
     public void showTimePickerDialog(View v) {
-
+        DialogFragment df = new TimePickerFragment();
+        df.show(getFragmentManager(), "timePicker");
     }
 
     public void showDatePickerDialog(View v) {
+        DialogFragment df  = new DatePickerFragment();
+        df.show(getFragmentManager(), "datePicker");
+    }
 
+    public void setTime(int hour, int minute) {
+        time = hour * 3600 + minute * 60;
+        setDateTimeView();
+    }
+
+    // Called by DatePickerFragment.onDateSet
+    public void setDate(int year, int month, int day) {
+        date = String.format("%04d", year) + "/" + String.format("%02d", month) + "/" +
+                String.format("%02d", day);
+        setDateTimeView();
+    }
+
+    // update the view to display the date and time stored in private members date, time
+    public void setDateTimeView() {
+        String timeStr = Utilities.secondsToTimeString(time);
+        TextView dateTimeView = (TextView) findViewById(R.id.dateTimeValue);
+        dateTimeView.setText(date + " " + timeStr);
     }
 }
