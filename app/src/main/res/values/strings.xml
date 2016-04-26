@@ -27,12 +27,11 @@
     <string name="delete">delete</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
-    <string name="confirm_delete">Are you sure you want to delete?</string>
+    <string name="confirm_delete">Confirm delete</string>
+    <string name="confirm_delete_msg">Are you sure you want to delete</string>
 
     <string name="title_activity_graph_view">Weight history chart</string>
     <string name="raw_data">Raw data</string>
     <string name="smoothed_data">Smoothed data</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -74,6 +74,7 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
         for (DBHelper.WeightEntry we : weights) {
             TextView weightView = new TextView(this);
             weightView.setText("" + we.weight + " " + getString(R.string.lbs));
+            weightView.setTag("weight");
 
             TextView dateView = new TextView(this);
             dateView.setText(we.date);
@@ -111,9 +112,12 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
     }
 
     public AlertDialog confirmDeleteDialog(final View view) {
+        View table_row = (View) view.getParent();
+        TextView weightTV = (TextView) table_row.findViewWithTag("weight");
+        String weightStr = weightTV.getText().toString();
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.delete)
-                .setMessage(R.string.confirm_delete)
+                .setTitle(R.string.confirm_delete)
+                .setMessage(getString(R.string.confirm_delete_msg) + " " + weightStr + "?")
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface d, int whichButton) {
                         int id = view.getId();
