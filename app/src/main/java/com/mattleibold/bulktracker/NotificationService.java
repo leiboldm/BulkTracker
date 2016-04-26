@@ -34,7 +34,7 @@ public class NotificationService extends IntentService {
                             .setSmallIcon(R.drawable.notification_icon)
                             .setContentTitle(getString(R.string.reminder_notification_title))
                             .setContentText(getString(R.string.reminder_notification_text));
-            mBuilder.setVibrate(new long[]{500, 500, 500});
+            mBuilder.setVibrate(new long[]{500, 500, 500, 500, 500});
             mBuilder.setLights(0x97935d, 3000, 3000);
             Intent resultIntent = new Intent(this, MainActivity.class);
 
@@ -50,7 +50,7 @@ public class NotificationService extends IntentService {
             NotificationManager mNotificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             int notification_id = (int) System.currentTimeMillis();
-            mNotificationManager.notify(notification_id, mBuilder.build());
+            mNotificationManager.notify(mostRecent.makeTimestamp(), mBuilder.build());
         }
     }
 }

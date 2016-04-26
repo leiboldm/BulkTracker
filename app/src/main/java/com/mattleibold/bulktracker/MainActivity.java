@@ -25,14 +25,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent,
-                PendingIntent.FLAG_NO_CREATE);
-        AlarmManager alarmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmMgr.setInexactRepeating(AlarmManager.RTC,
-                System.currentTimeMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+        Utilities.setNotificationAlarm(this);
     }
 
     @Override

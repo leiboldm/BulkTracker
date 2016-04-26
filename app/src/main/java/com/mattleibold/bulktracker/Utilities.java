@@ -1,5 +1,10 @@
 package com.mattleibold.bulktracker;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -54,6 +59,17 @@ public class Utilities {
             hours = 12;
         }
         return String.valueOf(hours) + ":" + minuteStr + " " + meridiem;
+    }
+
+    public static void setNotificationAlarm(Context context) {
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        long interval = AlarmManager.INTERVAL_DAY; // milliseconds between alarms
+        alarmMgr.setInexactRepeating(AlarmManager.RTC,
+                System.currentTimeMillis(),
+                interval, pendingIntent);
     }
 
 }
