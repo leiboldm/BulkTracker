@@ -3,6 +3,9 @@ package com.mattleibold.bulktracker;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -34,6 +39,14 @@ public class WeightEntryActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_entry);
+
+        // Hide picture related UI if the user has no camera
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            View pictureLabel = findViewById(R.id.progressPictureLabel);
+            pictureLabel.setVisibility(View.GONE);
+            View pictureButton = findViewById(R.id.takePictureButton);
+            pictureButton.setVisibility(View.GONE);
+        }
 
         date = Utilities.getCurrentDateString();
         time = Utilities.getSecondsSinceStartOfDay();
@@ -129,5 +142,27 @@ public class WeightEntryActivity extends FragmentActivity {
         String timeStr = Utilities.secondsToTimeString(time);
         TextView dateTimeView = (TextView) findViewById(R.id.dateTimeValue);
         dateTimeView.setText(date + " " + timeStr);
+    }
+
+    // the request code (id) for starting a camera activity to take a progress picture
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    public void takeProgressPicture(View v) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            ImageView pictureHolder = (ImageView) findViewById(R.id.pictureHolder);
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            pictureHolder.setImageBitmap(imageBitmap);
+
+            Button takePictureButton = (Button) findViewById(R.id.takePictureButton);
+            takePictureButton.setText(getString(R.string.take_new_picture));
+        }
     }
 }
