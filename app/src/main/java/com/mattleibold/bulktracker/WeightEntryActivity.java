@@ -166,7 +166,9 @@ public class WeightEntryActivity extends FragmentActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        photoFile = File.createTempFile(imageFileName, ".jpg", storageDir);
+        File imageRoot = new File(storageDir, getString(R.string.app_name));
+        imageRoot.mkdirs();
+        photoFile = File.createTempFile(imageFileName, ".jpg", imageRoot);
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
