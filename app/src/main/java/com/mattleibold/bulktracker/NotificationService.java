@@ -49,8 +49,8 @@ public class NotificationService extends IntentService {
             mBuilder.setContentIntent(resultPendingIntent);
             NotificationManager mNotificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            int notification_id = (int) System.currentTimeMillis();
-            mNotificationManager.notify(mostRecent.makeTimestamp(), mBuilder.build());
+            int notification_id = mostRecent.makeTimestamp();
+            mNotificationManager.notify(notification_id, mBuilder.build());
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.mattleibold.bulktracker;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -68,8 +69,14 @@ public class Utilities {
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long interval = AlarmManager.INTERVAL_DAY; // milliseconds between alarms
         alarmMgr.setInexactRepeating(AlarmManager.RTC,
-                System.currentTimeMillis(),
+                System.currentTimeMillis() - 1,
                 interval, pendingIntent);
+    }
+
+    public static void cancelPreviousNotifications(Context context) {
+        NotificationManager nm = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancelAll();
     }
 
 }
