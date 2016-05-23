@@ -104,6 +104,17 @@ public class WeightEntryActivity extends FragmentActivity {
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
+    @Override
+    protected void onDestroy() {
+        for (String filename : progressPicturePaths) {
+            File file = new File(filename);
+            file.delete();
+            Log.d("BTLOG", "Deleting " + filename);
+            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(filename))));
+        }
+        super.onDestroy();
+    }
+
     public void logWeight(View view) {
         DBHelper db = new DBHelper(getApplicationContext());
         EditText et = (EditText) findViewById(R.id.weightValue);
