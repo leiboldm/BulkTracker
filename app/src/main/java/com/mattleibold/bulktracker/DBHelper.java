@@ -85,10 +85,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(WeightEntry.CREATE_TABLE_SQL);
+        db.execSQL(ProgressPicture.CREATE_TABLE_SQL);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(WeightEntry.DROP_TABLE_SQL);
+        db.execSQL(ProgressPicture.DROP_TABLE_SQL);
         onCreate(db);
     }
 
@@ -144,5 +146,22 @@ public class DBHelper extends SQLiteOpenHelper {
         String comment = res.getString(res.getColumnIndex(WeightEntry.COMMENT_COLUMN_NAME));
         int id = res.getInt(res.getColumnIndex(WeightEntry.ID_COLUMN_NAME));
         return new WeightEntry(pounds, date, time, comment, id);
+    }
+
+    public boolean insertProgressPicture(double weight, String date, int time, String filepath) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(ProgressPicture.POUNDS_COLUMN_NAME, weight);
+        cv.put(ProgressPicture.DATE_COLUMN_NAME, date);
+        cv.put(ProgressPicture.TIME_COLUMN_NAME, time);
+        cv.put(ProgressPicture.PATH_COLUMN_NAME, filepath);
+        long row_id = db.insert(ProgressPicture.TABLE_NAME, null, cv);
+        return row_id != -1;
+    }
+
+    public boolean deleteProgressPicture(int row_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(ProgressPicture.TABLE_NAME,
+                ProgressPicture.ID_COLUMN_NAME + " = " + row_id, null) > 0;
     }
 }

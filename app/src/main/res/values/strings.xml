@@ -25,6 +25,7 @@
     <string name="progress_picture">Progress picture</string>
     <string name="take_picture">Take picture</string>
     <string name="take_new_picture">Take new picture</string>
+    <string name="take_another_picture">Take another picture</string>
 
     <string name="title_activity_weight_history">Weight history</string>
     <string name="delete">delete</string>

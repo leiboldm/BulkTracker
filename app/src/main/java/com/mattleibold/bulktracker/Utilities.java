@@ -85,7 +85,7 @@ public class Utilities {
         alarmMgr.cancel(pendingIntent);
         setNotificationAlarm(context);
     }
-    
+
     public static void cancelPreviousNotifications(Context context) {
         NotificationManager nm = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);

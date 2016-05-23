@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -19,8 +23,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,12 +35,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.Vector;
 
 
 public class WeightEntryActivity extends FragmentActivity {
 
     private String date;
     private int time;
+    private Vector<String> progressPicturePaths;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,7 @@ public class WeightEntryActivity extends FragmentActivity {
             View pictureButton = findViewById(R.id.takePictureButton);
             pictureButton.setVisibility(View.GONE);
         }
+        progressPicturePaths = new Vector<String>();
 
         date = Utilities.getCurrentDateString();
         time = Utilities.getSecondsSinceStartOfDay();
@@ -111,6 +121,10 @@ public class WeightEntryActivity extends FragmentActivity {
         db.insertWeight(pounds, date, time, comment);
         Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
 
+        for (String filepath : progressPicturePaths) {
+            db.insertProgressPicture(pounds, date, time, filepath);
+        }
+
         Intent intent = new Intent(this, WeightHistoryActivity.class);
         startActivity(intent);
     }
@@ -144,11 +158,19 @@ public class WeightEntryActivity extends FragmentActivity {
         dateTimeView.setText(date + " " + timeStr);
     }
 
+    private File photoFile;
+
     // the request code (id) for starting a camera activity to take a progress picture
     public static final int REQUEST_IMAGE_CAPTURE = 1;
-    public void takeProgressPicture(View v) {
+    public void takeProgressPicture(View v) throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        photoFile = File.createTempFile(imageFileName, ".jpg", storageDir);
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
@@ -156,13 +178,34 @@ public class WeightEntryActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            ImageView pictureHolder = (ImageView) findViewById(R.id.pictureHolder);
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            pictureHolder.setImageBitmap(imageBitmap);
+            LinearLayout pictureContainer = (LinearLayout) findViewById(R.id.pictureContainer);
+            ImageView thumbnail = new ImageView(this);
+            String photoFilePath = photoFile.getAbsolutePath();
+            progressPicturePaths.add(photoFilePath);
 
+            Bitmap image = BitmapFactory.decodeFile(photoFilePath);
+            Matrix matrix = new Matrix();
+            matrix.postRotate(270f);
+            Bitmap rotated = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(),
+                    matrix, true);
+
+            thumbnail.setAdjustViewBounds(true);
+            thumbnail.setMaxHeight(300);
+            thumbnail.setImageBitmap(rotated);
+
+            galleryAddPic(photoFilePath);
+
+            pictureContainer.addView(thumbnail);
             Button takePictureButton = (Button) findViewById(R.id.takePictureButton);
-            takePictureButton.setText(getString(R.string.take_new_picture));
+            takePictureButton.setText(getString(R.string.take_another_picture));
         }
+    }
+
+    private void galleryAddPic(String photoPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(photoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 }
