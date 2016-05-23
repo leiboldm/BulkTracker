@@ -26,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Utilities.cancelPreviousNotifications(this);
-        Utilities.setNotificationAlarm(this);
+        Utilities.refreshNotificationAlarm(this);
     }
 
     @Override

@@ -62,10 +62,15 @@ public class Utilities {
         return String.valueOf(hours) + ":" + minuteStr + " " + meridiem;
     }
 
-    public static void setNotificationAlarm(Context context) {
+    private static PendingIntent getAlarmReceiverPI(Context context) {
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
+        return pendingIntent;
+    }
+
+    public static void setNotificationAlarm(Context context) {
+        PendingIntent pendingIntent = getAlarmReceiverPI(context);
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long interval = AlarmManager.INTERVAL_DAY; // milliseconds between alarms
         alarmMgr.setInexactRepeating(AlarmManager.RTC,
@@ -73,6 +78,14 @@ public class Utilities {
                 interval, pendingIntent);
     }
 
+    // removes any previous notification alarms, and sets a new one
+    public static void refreshNotificationAlarm(Context context) {
+        PendingIntent pendingIntent = getAlarmReceiverPI(context);
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.cancel(pendingIntent);
+        setNotificationAlarm(context);
+    }
+    
     public static void cancelPreviousNotifications(Context context) {
         NotificationManager nm = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
