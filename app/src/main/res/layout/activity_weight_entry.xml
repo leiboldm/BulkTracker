@@ -57,10 +57,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/progressPictureLabel"/>
-
-    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
-        android:orientation="horizontal" android:id="@+id/pictureContainer">
-    </LinearLayout>
+    <HorizontalScrollView android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
+            android:orientation="horizontal" android:id="@+id/pictureContainer">
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
         android:orientation="horizontal">

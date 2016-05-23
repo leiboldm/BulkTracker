@@ -192,8 +192,9 @@ public class WeightEntryActivity extends FragmentActivity {
                     matrix, true);
 
             thumbnail.setAdjustViewBounds(true);
-            thumbnail.setMaxHeight(300);
+            thumbnail.setMaxHeight(400);
             thumbnail.setImageBitmap(rotated);
+            thumbnail.setPadding(10, 0, 10, 0);
 
             galleryAddPic(photoFilePath);
 
