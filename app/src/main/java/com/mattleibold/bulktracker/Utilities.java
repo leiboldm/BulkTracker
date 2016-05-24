@@ -5,6 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -90,6 +93,15 @@ public class Utilities {
         NotificationManager nm = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancelAll();
+    }
+
+    public static Bitmap loadThumbnailWithRotation(String filepath, float rotation) {
+        Bitmap image = BitmapFactory.decodeFile(filepath);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+        Bitmap rotated = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(),
+                matrix, true);
+        return rotated;
     }
 
 }

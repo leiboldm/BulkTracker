@@ -38,4 +38,7 @@
     <string name="raw_data">Raw data</string>
     <string name="smoothed_data">Smoothed data</string>
 
+    <string name="title_activity_picture_gallery">Picture Gallery</string>
+    <string name="progress_pictures">Progress pictures</string>
+
 </resources>

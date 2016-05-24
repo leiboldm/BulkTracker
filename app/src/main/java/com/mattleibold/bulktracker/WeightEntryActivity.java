@@ -106,6 +106,7 @@ public class WeightEntryActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
+        // delete photos that weren't saved
         for (String filename : progressPicturePaths) {
             File file = new File(filename);
             file.delete();
@@ -133,8 +134,16 @@ public class WeightEntryActivity extends FragmentActivity {
         Log.d("BTLOG", "Weight added: " + String.valueOf(pounds));
 
         for (String filepath : progressPicturePaths) {
-            db.insertProgressPicture(pounds, date, time, filepath);
+            boolean success = db.insertProgressPicture(pounds, date, time, filepath);
+            Log.d("BTLOG", "Inserting progress picture " + filepath + ": " + success);
         }
+
+        // clear the input fields after submitting
+        progressPicturePaths.clear();
+        commentET.setText("");
+        et.setText("");
+        LinearLayout pictureContainer = (LinearLayout) findViewById(R.id.pictureContainer);
+        pictureContainer.removeAllViews();
 
         Intent intent = new Intent(this, WeightHistoryActivity.class);
         startActivity(intent);
@@ -196,15 +205,11 @@ public class WeightEntryActivity extends FragmentActivity {
             String photoFilePath = photoFile.getAbsolutePath();
             progressPicturePaths.add(photoFilePath);
 
-            Bitmap image = BitmapFactory.decodeFile(photoFilePath);
-            Matrix matrix = new Matrix();
-            matrix.postRotate(270f);
-            Bitmap rotated = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(),
-                    matrix, true);
+            Bitmap image = Utilities.loadThumbnailWithRotation(photoFilePath, 270f);
 
             thumbnail.setAdjustViewBounds(true);
             thumbnail.setMaxHeight(400);
-            thumbnail.setImageBitmap(rotated);
+            thumbnail.setImageBitmap(image);
             thumbnail.setPadding(10, 0, 10, 0);
 
             galleryAddPic(photoFilePath);

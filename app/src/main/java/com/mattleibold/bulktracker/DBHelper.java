@@ -13,13 +13,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 
 /**
  * Created by Matt on 3/28/2016.
  */
 public class DBHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "BulkTrackerDB.db";
 
     public static class WeightEntry implements BaseColumns {
@@ -80,7 +81,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {
@@ -89,9 +90,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(WeightEntry.DROP_TABLE_SQL);
-        db.execSQL(ProgressPicture.DROP_TABLE_SQL);
-        onCreate(db);
+        switch (oldVersion) {
+            case 1:
+                db.execSQL(ProgressPicture.CREATE_TABLE_SQL);
+        }
     }
 
     public boolean insertWeight(double weight, String date, int time, String comment) {
@@ -163,5 +165,26 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(ProgressPicture.TABLE_NAME,
                 ProgressPicture.ID_COLUMN_NAME + " = " + row_id, null) > 0;
+    }
+
+    public Vector<ProgressPicture> getAllProgressPictures() {
+        Vector<ProgressPicture> pics = new Vector<ProgressPicture>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(ProgressPicture.GET_ALL_SQL, null);
+        res.moveToFirst();
+        while (!res.isAfterLast()) {
+            pics.add(makeProgressPicture(res));
+            res.moveToNext();
+        }
+        return pics;
+    }
+
+    private ProgressPicture makeProgressPicture(Cursor res) {
+        double pounds = res.getDouble(res.getColumnIndex(ProgressPicture.POUNDS_COLUMN_NAME));
+        String date = res.getString(res.getColumnIndex(ProgressPicture.DATE_COLUMN_NAME));
+        int time = res.getInt(res.getColumnIndex(ProgressPicture.TIME_COLUMN_NAME));
+        String filepath = res.getString(res.getColumnIndex(ProgressPicture.PATH_COLUMN_NAME));
+        int id = res.getInt(res.getColumnIndex(ProgressPicture.ID_COLUMN_NAME));
+        return new ProgressPicture(pounds, date, time, filepath, id);
     }
 }

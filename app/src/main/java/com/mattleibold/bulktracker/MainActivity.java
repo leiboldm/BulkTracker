@@ -93,4 +93,9 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, GraphViewActivity.class);
         startActivity(intent);
     }
+
+    public void showPictureGalleryActivity(View view) {
+        Intent intent = new Intent(this, PictureGalleryActivity.class);
+        startActivity(intent);
+    }
 }
