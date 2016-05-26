@@ -40,5 +40,6 @@
 
     <string name="title_activity_picture_gallery">Picture Gallery</string>
     <string name="progress_pictures">Progress pictures</string>
+    <string name="title_activity_picture_pager">PicturePagerActivity</string>
 
 </resources>

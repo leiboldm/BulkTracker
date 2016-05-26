@@ -62,7 +62,7 @@ import java.util.Vector;
 
             // set the thumbnail image
             ImageView image = (ImageView) thumbnailView.findViewById(R.id.thumbnail_image);
-            image.setImageBitmap(Utilities.loadThumbnailWithRotation(data.filepath));
+            image.setImageBitmap(Utilities.loadBitmapWithRotation(data.filepath));
             image.setAdjustViewBounds(true);
             //image.setMaxHeight(500);
 

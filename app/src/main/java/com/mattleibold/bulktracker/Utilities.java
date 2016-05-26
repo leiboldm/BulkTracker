@@ -75,6 +75,7 @@ public class Utilities {
         return pendingIntent;
     }
 
+    // Schedules an alarm to send a notification
     public static void setNotificationAlarm(Context context) {
         PendingIntent pendingIntent = getAlarmReceiverPI(context);
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -98,8 +99,12 @@ public class Utilities {
         nm.cancelAll();
     }
 
-    public static Bitmap loadThumbnailWithRotation(String filepath) {
+    // returns a Bitmap containing the image in filepath rotated to the correct orientation
+    // returns null if filepath cannot be decoded
+    public static Bitmap loadBitmapWithRotation(String filepath) {
         Bitmap image = BitmapFactory.decodeFile(filepath);
+        if (image == null) return null;
+
         float rotation = 0f;
         try {
             ExifInterface exifData = new ExifInterface(filepath);

@@ -65,6 +65,10 @@
             android:name=".PictureGalleryActivity"
             android:label="@string/title_activity_picture_gallery" >
         </activity>
+        <activity
+            android:name=".PicturePagerActivity"
+            android:label="@string/title_activity_picture_pager" >
+        </activity>
     </application>
 
 </manifest>

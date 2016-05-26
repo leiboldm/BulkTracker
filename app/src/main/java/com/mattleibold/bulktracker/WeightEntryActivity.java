@@ -116,6 +116,7 @@ public class WeightEntryActivity extends FragmentActivity {
         super.onDestroy();
     }
 
+    // called when the user submits a new weight entry
     public void logWeight(View view) {
         DBHelper db = new DBHelper(getApplicationContext());
         EditText et = (EditText) findViewById(R.id.weightValue);
@@ -159,6 +160,7 @@ public class WeightEntryActivity extends FragmentActivity {
         df.show(getFragmentManager(), "datePicker");
     }
 
+    // Called by TimePickerFragment.onTimeSet
     public void setTime(int hour, int minute) {
         time = hour * 3600 + minute * 60;
         setDateTimeView();
@@ -178,10 +180,13 @@ public class WeightEntryActivity extends FragmentActivity {
         dateTimeView.setText(date + " " + timeStr);
     }
 
+    // file object containing the most recent picture
     private File photoFile;
 
     // the request code (id) for starting a camera activity to take a progress picture
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    // Creates a file to store a picture in, then launches an image capture activity
     public void takeProgressPicture(View v) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -205,7 +210,7 @@ public class WeightEntryActivity extends FragmentActivity {
             String photoFilePath = photoFile.getAbsolutePath();
             progressPicturePaths.add(photoFilePath);
 
-            Bitmap image = Utilities.loadThumbnailWithRotation(photoFilePath);
+            Bitmap image = Utilities.loadBitmapWithRotation(photoFilePath);
 
             thumbnail.setAdjustViewBounds(true);
             thumbnail.setMaxHeight(400);
@@ -220,6 +225,7 @@ public class WeightEntryActivity extends FragmentActivity {
         }
     }
 
+    // Alert external photo gallery applications of progress pictures
     private void galleryAddPic(String photoPath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(photoPath);
