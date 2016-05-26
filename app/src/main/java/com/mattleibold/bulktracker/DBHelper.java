@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import android.util.Log;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -117,7 +116,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public int getWeightsCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(WeightEntry.GET_MOST_RECENT_SQL, null);
-        return res.getCount();
+        int count = res.getCount();
+        res.close();
+        return count;
     }
 
     // returns the most recent weight the user has entered

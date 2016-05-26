@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/progressPictureLabel"/>
     <HorizontalScrollView android:layout_width="fill_parent" android:layout_height="wrap_content">
-        <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent"
+        <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content"
             android:orientation="horizontal" android:id="@+id/pictureContainer">
         </LinearLayout>
     </HorizontalScrollView>

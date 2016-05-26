@@ -1,7 +1,6 @@
 package com.mattleibold.bulktracker;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -17,7 +16,7 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d("BTLOG", "Notifcation Service!");
+        Log.d("BTLOG", "Notification Service!");
         DBHelper db = new DBHelper(this);
         if (db.getWeightsCount() < 1) {
             return;

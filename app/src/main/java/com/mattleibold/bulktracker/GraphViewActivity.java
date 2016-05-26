@@ -4,11 +4,9 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -19,11 +17,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.exp;
@@ -165,9 +159,8 @@ public class GraphViewActivity extends ActionBarActivity {
         endDate.setTime(endDate.getTime() + 1000 * 24 * 60 * 60);
         // period parameter for locally weighted regression, larger period = smoother graph
         int period = 3; // days
-        // milliseconds between data points, default is one day
-        long interval = 24 * 60 * 60 * 60 * 1000; // milliseconds between data points, default is one day
-        interval = (endDate.getTime() - startDate.getTime()) / 50;
+        // milliseconds between data points
+        long interval = (endDate.getTime() - startDate.getTime()) / 50;
         for (Date iDate = new Date(startDate.getTime());
              iDate.before(endDate);
              iDate.setTime(iDate.getTime() + interval)) {

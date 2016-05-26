@@ -11,7 +11,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("BTLOG", "Alarm recieved at " + Utilities.getSecondsSinceStartOfDay());
+        Log.d("BTLOG", "Alarm received at " + Utilities.getSecondsSinceStartOfDay());
         Intent i = new Intent(context, NotificationService.class);
         context.startService(i);
     }

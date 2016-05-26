@@ -10,26 +10,25 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
         android:scrollbars="none"
         android:layout_weight="1">
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id = "@+id/weightHistoryTable"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0"
-        android:padding="1dp" >
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id = "@+id/weightHistoryTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="1dp" >
 
-        <TableRow android:layout_height="wrap_content">
-            <TextView android:text="Weight"></TextView>
-            <TextView android:text="Date"></TextView>
-            <TextView android:text="Time"></TextView>
-            <TextView android:text="Edit"></TextView>
-        </TableRow>
-        <TextView android:text="Comment"></TextView>
+            <TableRow android:layout_height="wrap_content">
+                <TextView android:text="@string/weight"></TextView>
+                <TextView android:text="@string/date"></TextView>
+                <TextView android:text="@string/time"></TextView>
+                <TextView android:text="@string/edit"></TextView>
+            </TableRow>
+            <TextView android:text="@string/comment"></TextView>
 
-    </TableLayout>
+        </TableLayout>
     </ScrollView>
 
 </LinearLayout>
