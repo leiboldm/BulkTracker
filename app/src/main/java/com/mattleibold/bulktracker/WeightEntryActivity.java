@@ -205,7 +205,7 @@ public class WeightEntryActivity extends FragmentActivity {
             String photoFilePath = photoFile.getAbsolutePath();
             progressPicturePaths.add(photoFilePath);
 
-            Bitmap image = Utilities.loadThumbnailWithRotation(photoFilePath, 270f);
+            Bitmap image = Utilities.loadThumbnailWithRotation(photoFilePath);
 
             thumbnail.setAdjustViewBounds(true);
             thumbnail.setMaxHeight(400);

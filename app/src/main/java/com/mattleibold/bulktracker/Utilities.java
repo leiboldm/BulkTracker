@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.util.Log;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -95,8 +98,28 @@ public class Utilities {
         nm.cancelAll();
     }
 
-    public static Bitmap loadThumbnailWithRotation(String filepath, float rotation) {
+    public static Bitmap loadThumbnailWithRotation(String filepath) {
         Bitmap image = BitmapFactory.decodeFile(filepath);
+        float rotation = 0f;
+        try {
+            ExifInterface exifData = new ExifInterface(filepath);
+            int exifRotation = exifData.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            switch (exifRotation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotation = 90f;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotation = 180f;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotation = 270f;
+                    break;
+            }
+        } catch (IOException exception) {
+            Log.d("BTLOG", "IOException in ExifInterface: " + exception.getMessage());
+        }
+
         Matrix matrix = new Matrix();
         matrix.postRotate(rotation);
         Bitmap rotated = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(),
