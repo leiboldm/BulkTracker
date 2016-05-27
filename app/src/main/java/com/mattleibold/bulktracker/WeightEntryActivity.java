@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +27,7 @@ import java.util.Date;
 import java.util.Vector;
 
 
-public class WeightEntryActivity extends FragmentActivity {
+public class WeightEntryActivity extends ActionBarActivity {
 
     private String date;
     private int time;
@@ -71,15 +72,8 @@ public class WeightEntryActivity extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        Utilities.handleOptionsItemSelected(this, id);
 
         return super.onOptionsItemSelected(item);
     }

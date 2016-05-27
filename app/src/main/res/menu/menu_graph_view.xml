@@ -4,4 +4,10 @@
     tools:context="com.mattleibold.bulktracker.GraphViewActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_weight_entry" android:title="@string/weight_entry"
+        android:orderInCategory="101" app:showAsAction="never" />
+    <item android:id="@+id/action_history" android:title="@string/history"
+        android:orderInCategory="102" app:showAsAction="never" />
+    <item android:id="@+id/action_pictures" android:title="@string/progress_pictures"
+        android:orderInCategory="103" app:showAsAction="never" />
 </menu>

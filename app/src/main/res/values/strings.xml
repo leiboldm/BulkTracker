@@ -46,5 +46,7 @@
     <string name="time">Time</string>
     <string name="edit">Edit</string>
     <string name="comment">Comment</string>
+    <string name="history">History</string>
+    <string name="weight_entry">Weight entry</string>
 
 </resources>

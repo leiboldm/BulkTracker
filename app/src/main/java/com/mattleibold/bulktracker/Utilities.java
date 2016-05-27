@@ -132,4 +132,21 @@ public class Utilities {
         return rotated;
     }
 
+    public static boolean handleOptionsItemSelected(Context context, int id) {
+        if (id == R.id.action_weight_entry) {
+            Intent intent = new Intent(context, WeightEntryActivity.class);
+            context.startActivity(intent);
+        } else if (id == R.id.action_history) {
+            Intent intent = new Intent(context, WeightHistoryActivity.class);
+            context.startActivity(intent);
+        } else if (id == R.id.action_pictures) {
+            Intent intent = new Intent(context, PictureGalleryActivity.class);
+            context.startActivity(intent);
+        } else if (id == R.id.action_graph) {
+            Intent intent = new Intent(context, GraphViewActivity.class);
+            context.startActivity(intent);
+        }
+        return true;
+    }
+
 }
