@@ -101,8 +101,10 @@ public class Utilities {
 
     // returns a Bitmap containing the image in filepath rotated to the correct orientation
     // returns null if filepath cannot be decoded
-    public static Bitmap loadBitmapWithRotation(String filepath) {
-        Bitmap image = BitmapFactory.decodeFile(filepath);
+    public static Bitmap loadBitmapWithRotation(String filepath, int inverse_scale) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = inverse_scale;
+        Bitmap image = BitmapFactory.decodeFile(filepath, options);
         if (image == null) return null;
 
         float rotation = 0f;
@@ -130,6 +132,10 @@ public class Utilities {
         Bitmap rotated = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(),
                 matrix, true);
         return rotated;
+    }
+
+    public static Bitmap loadBitmapWithRotation(String filepath) {
+        return loadBitmapWithRotation(filepath, 1);
     }
 
     public static boolean handleOptionsItemSelected(Context context, int id) {

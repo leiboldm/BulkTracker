@@ -16,29 +16,13 @@ import java.util.Vector;
 
 
 public class PictureGalleryActivity extends ActionBarActivity {
+    private ThumbnailAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_gallery);
-        drawGallery();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_picture_gallery, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Utilities.handleOptionsItemSelected(this, id);
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void drawGallery() {
         DBHelper db = new DBHelper(getApplicationContext());
         Vector<ProgressPicture> pics = db.getAllProgressPictures();
         Vector<ThumbnailAdapter.ThumbnailData> thumbnails = new Vector< >();
@@ -60,7 +44,8 @@ public class PictureGalleryActivity extends ActionBarActivity {
         }
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ThumbnailAdapter(this, thumbnails));
+        mAdapter = new ThumbnailAdapter(this, thumbnails);
+        gridview.setAdapter(mAdapter);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -72,5 +57,19 @@ public class PictureGalleryActivity extends ActionBarActivity {
                 startActivity(fullPictureIntent);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_picture_gallery, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Utilities.handleOptionsItemSelected(this, id);
+
+        return super.onOptionsItemSelected(item);
     }
 }

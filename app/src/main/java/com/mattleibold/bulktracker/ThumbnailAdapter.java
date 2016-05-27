@@ -1,6 +1,7 @@
 package com.mattleibold.bulktracker;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,12 @@ import java.util.Vector;
 
     private Context mContext;
     private Vector<ThumbnailData> mThumbnails;
+    private Vector<Bitmap> bitmaps;
 
     public ThumbnailAdapter(Context c, Vector<ThumbnailData> data) {
         mContext = c;
         mThumbnails = data;
+        bitmaps = new Vector<Bitmap>();
     }
 
     public int getCount() {
@@ -54,29 +57,36 @@ import java.util.Vector;
         View thumbnailView;
 
         if (convertView == null) {
-            ThumbnailData data = mThumbnails.get(position);
             thumbnailView = inflater.inflate(R.layout.photo_gallery_layout, null);
-
-            // set the thumbnail image
-            ImageView image = (ImageView) thumbnailView.findViewById(R.id.thumbnail_image);
-            image.setImageBitmap(Utilities.loadBitmapWithRotation(data.filepath));
-            image.setAdjustViewBounds(true);
-            //image.setMaxHeight(500);
-
-            // set the date text
-            TextView dateText = (TextView) thumbnailView.findViewById(R.id.date_text);
-            dateText.setText(data.date);
-
-            // set the weight text
-            TextView weightText = (TextView) thumbnailView.findViewById(R.id.weight_text);
-            weightText.setText(data.weight);
-            Log.d("BTLOG", "drawing thumbnail " + data.date + " " + data.weight);
-
             thumbnailView.setPadding(8, 8, 8, 8);
         } else {
             thumbnailView = (View) convertView;
         }
 
+        // set the thumbnail image
+        ThumbnailData data = mThumbnails.get(position);
+        ImageView image = (ImageView) thumbnailView.findViewById(R.id.thumbnail_image);
+        int inverse_scale = 8; // inverse_scale = 4 so scale = 1/4, i.e: bitmap is 1/4 the size
+        Bitmap thumbnail = Utilities.loadBitmapWithRotation(data.filepath, inverse_scale);
+        image.setImageBitmap(thumbnail);
+        bitmaps.add(thumbnail);
+        image.setAdjustViewBounds(true);
+
+        // set the date text
+        TextView dateText = (TextView) thumbnailView.findViewById(R.id.date_text);
+        dateText.setText(data.date);
+
+        // set the weight text
+        TextView weightText = (TextView) thumbnailView.findViewById(R.id.weight_text);
+        weightText.setText(data.weight);
+        Log.d("BTLOG", "drawing thumbnail " + data.date + " " + data.weight);
+
         return thumbnailView;
+    }
+
+    public void recycleBitmaps() {
+        for (Bitmap bm : bitmaps) {
+            bm.recycle();
+        }
     }
 }
