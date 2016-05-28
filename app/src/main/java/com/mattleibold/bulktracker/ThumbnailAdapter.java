@@ -66,9 +66,7 @@ import java.util.Vector;
         // set the thumbnail image
         ThumbnailData data = mThumbnails.get(position);
         ImageView image = (ImageView) thumbnailView.findViewById(R.id.thumbnail_image);
-        int inverse_scale = 8; // inverse_scale = 4 so scale = 1/4, i.e: bitmap is 1/4 the size
-        Bitmap thumbnail = Utilities.loadBitmapWithRotation(data.filepath, inverse_scale);
-        image.setImageBitmap(thumbnail);
+        Bitmap thumbnail = Utilities.loadBitmapWithRotation(image, data.filepath);
         bitmaps.add(thumbnail);
         image.setAdjustViewBounds(true);
 

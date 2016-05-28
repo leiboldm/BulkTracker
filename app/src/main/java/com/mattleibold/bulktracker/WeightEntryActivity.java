@@ -192,11 +192,10 @@ public class WeightEntryActivity extends ActionBarActivity {
             String photoFilePath = photoFile.getAbsolutePath();
             progressPicturePaths.add(photoFilePath);
 
-            Bitmap image = Utilities.loadBitmapWithRotation(photoFilePath);
+            Utilities.loadBitmapWithRotation(thumbnail, photoFilePath);
 
             thumbnail.setAdjustViewBounds(true);
             thumbnail.setMaxHeight(400);
-            thumbnail.setImageBitmap(image);
             thumbnail.setPadding(10, 0, 10, 0);
 
             galleryAddPic(photoFilePath);

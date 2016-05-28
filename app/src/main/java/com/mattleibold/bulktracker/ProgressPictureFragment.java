@@ -57,8 +57,7 @@ public class ProgressPictureFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_progress_picture, container, false);
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.progressPicture);
-        Bitmap image = Utilities.loadBitmapWithRotation(mFilepath);
-        imageView.setImageBitmap(image);
+        Utilities.loadBitmapWithRotation(imageView, mFilepath);
 
         TextView weightTextView = (TextView) rootView.findViewById(R.id.weightText);
         weightTextView.setText(mWeight + " lbs");

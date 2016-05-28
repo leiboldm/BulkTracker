@@ -3,9 +3,10 @@
     android:layout_width="fill_parent" android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ImageView android:layout_width="fill_parent" android:layout_height="wrap_content"
+    <ImageView android:layout_width="match_parent" android:layout_height="match_parent"
         android:id="@+id/thumbnail_image" android:gravity="center_horizontal"
-        android:contentDescription="@string/progress_picture"></ImageView>
+        android:contentDescription="@string/progress_picture"
+        android:src="@drawable/notification_icon"></ImageView>
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:id="@+id/date_text" android:gravity="center_horizontal"
