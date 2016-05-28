@@ -2,6 +2,7 @@ package com.mattleibold.bulktracker;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,12 +30,10 @@ import java.util.Vector;
 
     private Context mContext;
     private Vector<ThumbnailData> mThumbnails;
-    private Vector<Bitmap> bitmaps;
 
     public ThumbnailAdapter(Context c, Vector<ThumbnailData> data) {
         mContext = c;
         mThumbnails = data;
-        bitmaps = new Vector<Bitmap>();
     }
 
     public int getCount() {
@@ -66,8 +65,8 @@ import java.util.Vector;
         // set the thumbnail image
         ThumbnailData data = mThumbnails.get(position);
         ImageView image = (ImageView) thumbnailView.findViewById(R.id.thumbnail_image);
-        Bitmap thumbnail = Utilities.loadBitmapWithRotation(image, data.filepath);
-        bitmaps.add(thumbnail);
+        image.setImageResource(R.color.translucentblack);
+        Utilities.loadBitmap(image, data.filepath, true);
         image.setAdjustViewBounds(true);
 
         // set the date text
@@ -80,11 +79,5 @@ import java.util.Vector;
         Log.d("BTLOG", "drawing thumbnail " + data.date + " " + data.weight);
 
         return thumbnailView;
-    }
-
-    public void recycleBitmaps() {
-        for (Bitmap bm : bitmaps) {
-            bm.recycle();
-        }
     }
 }

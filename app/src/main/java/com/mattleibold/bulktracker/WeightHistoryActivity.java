@@ -89,7 +89,6 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
 
             layout.addView(tr, table_lp);
             layout.addView(commentView, table_lp);
-            Log.d("BTLOG", "Drawing TableRow " + we.weight + " " + we.date);
         }
     }
 

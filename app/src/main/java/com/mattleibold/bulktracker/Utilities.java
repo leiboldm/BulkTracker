@@ -101,73 +101,6 @@ public class Utilities {
         nm.cancelAll();
     }
 
-    // returns a Bitmap containing the image in filepath rotated to the correct orientation
-    // returns null if filepath cannot be decoded
-    public static Bitmap loadBitmapWithRotation(ImageView view, String filepath) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        int targetWidth = view.getWidth();
-        int targetHeight = view.getHeight();
-        Log.d("BTLOG", "target width = " + targetWidth + ", targetHeight = " + targetHeight);
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filepath, options);
-        int imageWidth = options.outWidth;
-        int imageHeight = options.outHeight;
-
-        // scale down the image
-        if (targetWidth == 0 || targetHeight == 0 ||
-                targetWidth > imageWidth || targetHeight > imageHeight) {
-            options.inSampleSize = Math.min(imageWidth / 360, imageHeight / 480);
-        } else {
-            options.inSampleSize = Math.min(imageWidth / targetWidth, imageHeight / targetHeight);
-        }
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        options.inDither = true;
-        options.inJustDecodeBounds = false;
-        Bitmap image;
-        try {
-            image = BitmapFactory.decodeFile(filepath, options);
-        } catch (OutOfMemoryError exception) {
-            Log.d("BTLOG", "Out of memory error: " + exception.getMessage());
-            view.setImageResource(R.drawable.notification_icon);
-            return null;
-        }
-
-        if (image == null) return null;
-
-        float rotation = 0f;
-        try {
-            ExifInterface exifData = new ExifInterface(filepath);
-            int exifRotation = exifData.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_NORMAL);
-            switch (exifRotation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotation = 90f;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotation = 180f;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotation = 270f;
-                    break;
-            }
-        } catch (IOException exception) {
-            Log.d("BTLOG", "IOException in ExifInterface: " + exception.getMessage());
-        }
-
-        Matrix matrix = new Matrix();
-        matrix.postRotate(rotation);
-        try {
-            image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(),
-                    matrix, true);
-        } catch (OutOfMemoryError exception) {
-            Log.d("BTLOG", "Out of memory error :" + exception.getMessage());
-            view.setImageResource(R.drawable.notification_icon);
-            return null;
-        }
-        view.setImageBitmap(image);
-        return image;
-    }
-
     public static boolean handleOptionsItemSelected(Context context, int id) {
         if (id == R.id.action_weight_entry) {
             Intent intent = new Intent(context, WeightEntryActivity.class);
@@ -185,4 +118,14 @@ public class Utilities {
         return true;
     }
 
+    // Loads the image at filepath into imageView.  If square is true, it crops to image to a square
+    public static void loadBitmap(ImageView imageView, String filepath, boolean square) {
+        ImageLoaderTask task = new ImageLoaderTask(imageView, filepath, square);
+        task.execute(0);
+    }
+
+    // overload of loadBitmap that defaults to retaining original image aspect ratio
+    public static void loadBitmap(ImageView imageView, String filepath) {
+        loadBitmap(imageView, filepath, false);
+    }
 }

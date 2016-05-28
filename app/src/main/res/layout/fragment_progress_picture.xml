@@ -4,8 +4,7 @@
     tools:context="com.mattleibold.bulktracker.ProgressPictureFragment">
 
     <ImageView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:id="@+id/progressPicture" android:contentDescription="@string/progress_picture"
-        android:src="@drawable/notification_icon"/>
+        android:id="@+id/progressPicture" android:contentDescription="@string/progress_picture" />
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="vertical" android:gravity="center_horizontal"

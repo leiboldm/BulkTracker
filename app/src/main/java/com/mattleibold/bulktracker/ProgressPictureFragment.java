@@ -23,6 +23,8 @@ public class ProgressPictureFragment extends Fragment {
     public String mDate;
     public double mWeight;
 
+    private View mRootView;
+
     public static ProgressPictureFragment newInstance(int index, String filepath,
                                                       String date, double weight) {
         ProgressPictureFragment fragment = new ProgressPictureFragment();
@@ -54,17 +56,21 @@ public class ProgressPictureFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_progress_picture, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_progress_picture, container, false);
 
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.progressPicture);
-        Utilities.loadBitmapWithRotation(imageView, mFilepath);
-
-        TextView weightTextView = (TextView) rootView.findViewById(R.id.weightText);
+        TextView weightTextView = (TextView) mRootView.findViewById(R.id.weightText);
         weightTextView.setText(mWeight + " lbs");
 
-        TextView dateTextView = (TextView) rootView.findViewById(R.id.dateText);
+        TextView dateTextView = (TextView) mRootView.findViewById(R.id.dateText);
         dateTextView.setText(mDate);
-        return rootView;
+        return mRootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ImageView imageView = (ImageView) mRootView.findViewById(R.id.progressPicture);
+        Utilities.loadBitmap(imageView, mFilepath);
     }
 
     @Override
