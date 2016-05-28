@@ -59,4 +59,10 @@ public class PicturePagerActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utilities.hideStatusBar(this);
+    }
+
 }
