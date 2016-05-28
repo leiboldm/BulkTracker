@@ -83,7 +83,7 @@ public class Utilities {
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long interval = AlarmManager.INTERVAL_DAY; // milliseconds between alarms
         alarmMgr.setInexactRepeating(AlarmManager.RTC,
-                System.currentTimeMillis() - 1,
+                System.currentTimeMillis() + interval,
                 interval, pendingIntent);
     }
 
