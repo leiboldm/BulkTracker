@@ -142,7 +142,7 @@ public class Utilities {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
             View decorView = window.getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
     }

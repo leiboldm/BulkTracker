@@ -94,5 +94,4 @@ public class PicturePagerActivity extends ActionBarActivity {
         super.onResume();
         Utilities.hideStatusBar(this);
     }
-
 }
