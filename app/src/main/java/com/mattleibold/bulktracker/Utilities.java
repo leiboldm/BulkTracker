@@ -160,7 +160,8 @@ public class Utilities {
         File file = new File(filepath);
         file.delete();
         Log.d("BTLOG", "Deleting " + filepath);
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(filepath))));
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.fromFile(file)));
         return true;
     }
 }
