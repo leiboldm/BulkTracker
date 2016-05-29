@@ -90,10 +90,7 @@ public class WeightEntryActivity extends ActionBarActivity {
     protected void onDestroy() {
         // delete photos that weren't saved
         for (String filename : progressPicturePaths) {
-            File file = new File(filename);
-            file.delete();
-            Log.d("BTLOG", "Deleting " + filename);
-            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(filename))));
+            Utilities.deletePhoto(this, filename);
         }
         super.onDestroy();
     }

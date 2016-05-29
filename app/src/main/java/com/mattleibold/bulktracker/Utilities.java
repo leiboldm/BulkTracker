@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -143,5 +145,22 @@ public class Utilities {
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    // Delete a picture from the filesystem and database
+    public static boolean deleteProgressPicture(Context context, ProgressPicture photo) {
+        DBHelper db = new DBHelper(context);
+        boolean success = db.deleteProgressPicture(photo.id);
+        success = success && deletePhoto(context, photo.filepath);
+        return success;
+    }
+
+    // Delete a photo from the filesystem and remove it from the Gallery
+    public static boolean deletePhoto(Context context, String filepath) {
+        File file = new File(filepath);
+        file.delete();
+        Log.d("BTLOG", "Deleting " + filepath);
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(filepath))));
+        return true;
     }
 }

@@ -48,5 +48,7 @@
     <string name="comment">Comment</string>
     <string name="history">History</string>
     <string name="weight_entry">Weight entry</string>
+    <string name="delete_photo">Delete photo</string>
+    <string name="photo_deleted">Photo deleted</string>
 
 </resources>

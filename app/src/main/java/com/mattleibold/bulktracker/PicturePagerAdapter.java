@@ -42,4 +42,8 @@ public class PicturePagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         return "OBJECT " + (position + 1);
     }
+
+    public ProgressPicture getPictureData(int position) {
+        return mPics.get(position);
+    }
 }

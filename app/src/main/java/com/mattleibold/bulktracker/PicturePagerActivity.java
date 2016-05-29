@@ -1,5 +1,8 @@
 package com.mattleibold.bulktracker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -55,7 +58,32 @@ public class PicturePagerActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Utilities.handleOptionsItemSelected(this, id);
+        if (id == R.id.action_delete_photo) {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.confirm_delete)
+                    .setMessage(getString(R.string.confirm_delete_msg) + "?")
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface d, int whichButton) {
+                            int position = mViewPager.getCurrentItem();
+                            ProgressPicture pic = mPicturePagerAdapter.getPictureData(position);
+                            Utilities.deleteProgressPicture(getApplicationContext(), pic);
+                            Toast.makeText(PicturePagerActivity.this, getString(R.string.photo_deleted),
+                                    Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), PictureGalleryActivity.class);
+                            startActivity(intent);
+                            d.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface d, int whichButton) {
+                            d.dismiss();
+                        }
+                    })
+                    .create();
+            dialog.show();
+        } else {
+            Utilities.handleOptionsItemSelected(this, id);
+        }
 
 
         return super.onOptionsItemSelected(item);
