@@ -3,14 +3,16 @@ package com.mattleibold.bulktracker;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 import java.util.Vector;
 
 
-public class PicturePagerActivity extends FragmentActivity {
+public class PicturePagerActivity extends ActionBarActivity {
     public static final String ARG_POSITION = "position";
 
     PicturePagerAdapter mPicturePagerAdapter;
