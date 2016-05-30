@@ -51,4 +51,19 @@
     <string name="delete_photo">Delete photo</string>
     <string name="photo_deleted">Photo deleted</string>
 
+    <string name="pref_reminders">Reminders?</string>
+    <string name="pref_reminders_summ">Enable daily reminders to enter your weight.</string>
+    <string name="pref_unit">Units</string>
+    <string-array name="pref_unit_entries">
+        <item>@string/lbs</item>
+        <item>@string/kgs</item>
+    </string-array>
+    <string name="english">English</string>
+    <string name="pref_language">Language</string>
+    <string-array name="pref_language_entries">
+        <item>@string/english</item>
+    </string-array>
+
+
+
 </resources>

@@ -108,7 +108,10 @@ public class Utilities {
     }
 
     public static boolean handleOptionsItemSelected(Context context, int id) {
-        if (id == R.id.action_weight_entry) {
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(context, SettingsActivity.class);
+            context.startActivity(intent);
+        } else if (id == R.id.action_weight_entry) {
             Intent intent = new Intent(context, WeightEntryActivity.class);
             context.startActivity(intent);
         } else if (id == R.id.action_history) {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <CheckBoxPreference
+        android:key="pref_reminders"
+        android:title="@string/pref_reminders"
+        android:summary="@string/pref_reminders_summ"
+        android:defaultValue="true" />
+    <ListPreference
+        android:key="pref_unit"
+        android:title="@string/pref_unit"
+        android:dialogTitle="@string/pref_unit"
+        android:entries="@array/pref_unit_entries"
+        android:entryValues="@array/pref_unit_entries"
+        android:defaultValue="@string/lbs" />
+    <ListPreference
+        android:key="pref_language"
+        android:title="@string/pref_language"
+        android:dialogTitle="@string/pref_language"
+        android:entries="@array/pref_language_entries"
+        android:entryValues="@array/pref_language_entries"
+        android:defaultValue="@string/english" />
+
+</PreferenceScreen>
