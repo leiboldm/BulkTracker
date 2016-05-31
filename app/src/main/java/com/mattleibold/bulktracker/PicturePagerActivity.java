@@ -69,8 +69,7 @@ public class PicturePagerActivity extends ActionBarActivity {
                             Toast.makeText(PicturePagerActivity.this, getString(R.string.photo_deleted),
                                     Toast.LENGTH_SHORT).show();
                             d.dismiss();
-                            Intent intent = new Intent(getApplicationContext(), PictureGalleryActivity.class);
-                            startActivity(intent);
+                            finish();
                         }
                     })
                     .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

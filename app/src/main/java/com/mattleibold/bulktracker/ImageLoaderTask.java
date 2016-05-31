@@ -31,7 +31,9 @@ public class ImageLoaderTask extends AsyncTask<Integer, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Integer... params) {
         ImageView iv = mImageViewReference.get();
-        return decodeSampledBitmapFromFilepath(mFilepath, iv.getWidth(), iv.getHeight(), mSquare);
+        int width = (iv == null) ? 0 : iv.getWidth();
+        int height = (iv == null) ? 0 : iv.getHeight();
+        return decodeSampledBitmapFromFilepath(mFilepath, width, height, mSquare);
     }
 
     // Once complete, see if ImageView is still around and set bitmap.
