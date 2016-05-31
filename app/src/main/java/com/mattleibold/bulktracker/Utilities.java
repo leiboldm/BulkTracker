@@ -6,12 +6,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -77,6 +79,7 @@ public class Utilities {
     }
 
     private static PendingIntent getAlarmReceiverPI(Context context) {
+        context = context.getApplicationContext();
         Intent alarmIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
@@ -85,6 +88,8 @@ public class Utilities {
 
     // Schedules an alarm to send a notification
     public static void setNotificationAlarm(Context context) {
+        if (!notificationsActive(context)) return;
+        context = context.getApplicationContext();
         PendingIntent pendingIntent = getAlarmReceiverPI(context);
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         long interval = AlarmManager.INTERVAL_DAY; // milliseconds between alarms
@@ -93,18 +98,30 @@ public class Utilities {
                 interval, pendingIntent);
     }
 
-    // removes any previous notification alarms, and sets a new one
-    public static void refreshNotificationAlarm(Context context) {
+    public static void removeNotificationAlarm(Context context) {
+        context = context.getApplicationContext();
         PendingIntent pendingIntent = getAlarmReceiverPI(context);
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.cancel(pendingIntent);
+    }
+
+    // removes any previous notification alarms, and sets a new one
+    public static void refreshNotificationAlarm(Context context) {
+        removeNotificationAlarm(context);
         setNotificationAlarm(context);
     }
 
     public static void cancelPreviousNotifications(Context context) {
+        context = context.getApplicationContext();
         NotificationManager nm = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancelAll();
+    }
+
+    // Check the app settings to see if the user has enabled notifications
+    public static boolean notificationsActive(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getBoolean(SettingsFragment.REMINDERS_KEY, true);
     }
 
     public static boolean handleOptionsItemSelected(Context context, int id) {
