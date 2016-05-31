@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -14,6 +17,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -173,18 +177,42 @@ public class Utilities {
     public static boolean deleteProgressPicture(Context context, ProgressPicture photo) {
         DBHelper db = new DBHelper(context);
         boolean success = db.deleteProgressPicture(photo.id);
+        if (!success) Log.d("BTLOG", "Failure deleting " + photo.filepath + " from database");
         success = success && deletePhoto(context, photo.filepath);
         return success;
     }
 
     // Delete a photo from the filesystem and remove it from the Gallery
     public static boolean deletePhoto(Context context, String filepath) {
-        File file = new File(filepath);
-        file.delete();
         Log.d("BTLOG", "Deleting " + filepath);
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.fromFile(file)));
-        return true;
+        File file = new File(filepath);
+        if (!file.exists()) {
+            Log.d("BTLOG", "File " + filepath + " doesn't exist");
+        }
+        boolean success = file.delete();
+        if (!success) Log.d("BTLOG", "Failure deleting " + filepath + " from filesystem");
+        else {
+            String[] projection = { MediaStore.Images.Media._ID };
+
+            // Match on the file path
+            String selection = MediaStore.Images.Media.DATA + " = ?";
+            String[] selectionArgs = new String[] { file.getAbsolutePath() };
+
+            // Query for the ID of the media matching the file path
+            Uri queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            ContentResolver contentResolver = context.getContentResolver();
+            Cursor c = contentResolver.query(queryUri, projection, selection, selectionArgs, null);
+            if (c.moveToFirst()) {
+                // We found the ID. Deleting the item via the content provider will also remove the file
+                long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+                Uri deleteUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                contentResolver.delete(deleteUri, null, null);
+            } else {
+                // File not found in media store DB
+            }
+            c.close();
+        }
+        return success;
     }
 
     public static String getWeightUnitStr(Context context) {
