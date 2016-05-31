@@ -20,6 +20,7 @@ public class PicturePagerActivity extends ActionBarActivity {
 
     PicturePagerAdapter mPicturePagerAdapter;
     ViewPager mViewPager;
+    DBHelper mDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +32,10 @@ public class PicturePagerActivity extends ActionBarActivity {
         int position = 0;
         if (extras != null) position = extras.getInt(ARG_POSITION);
 
-        DBHelper db = new DBHelper(getApplicationContext());
-        Vector<ProgressPicture> pics = db.getAllProgressPictures();
-        mPicturePagerAdapter = new PicturePagerAdapter(getSupportFragmentManager(), pics);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mPicturePagerAdapter);
-        mViewPager.setCurrentItem(position);
+        mDB = new DBHelper(getApplicationContext());
 
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setCurrentItem(position);
         mViewPager.setOnPageChangeListener(
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
@@ -93,5 +91,12 @@ public class PicturePagerActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
         Utilities.hideStatusBar(this);
+        setAdapter();
+    }
+
+    private void setAdapter() {
+        Vector<ProgressPicture> pics = mDB.getAllProgressPictures();
+        mPicturePagerAdapter = new PicturePagerAdapter(getSupportFragmentManager(), pics);
+        mViewPager.setAdapter(mPicturePagerAdapter);
     }
 }

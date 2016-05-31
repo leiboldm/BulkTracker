@@ -57,6 +57,7 @@ public class GraphViewActivity extends ActionBarActivity {
     private void drawChart() {
         GraphView chart = new GraphView(this);
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.graphViewMainLayout);
+        mainLayout.removeAllViews();
         mainLayout.addView(chart);
         DBHelper db = new DBHelper(getApplicationContext());
         ArrayList<DBHelper.WeightEntry> weights = db.getAllWeights();

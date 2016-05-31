@@ -63,7 +63,7 @@ public class WeightHistoryActivity extends ActionBarActivity implements View.OnC
 
         for (DBHelper.WeightEntry we : weights) {
             TextView weightView = new TextView(this);
-            weightView.setText("" + we.weight + " " + getString(R.string.lbs));
+            weightView.setText("" + we.weight + " " + Utilities.getWeightUnitStr(this));
             weightView.setTag("weight");
 
             TextView dateView = new TextView(this);

@@ -17,7 +17,8 @@
             android:layout_height="wrap_content" android:hint="@string/weight_hint"
             android:id="@+id/weightValue" />
         <TextView android:text="@string/lbs" android:layout_width="wrap_content"
-            android:layout_height="match_parent" android:gravity="center_vertical"/>
+            android:layout_height="match_parent" android:gravity="center_vertical"
+            android:id="@+id/weightUnit"/>
     </LinearLayout>
 
     <TextView android:text="@string/add_comment" android:layout_width="fill_parent"

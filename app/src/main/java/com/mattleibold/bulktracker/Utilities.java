@@ -22,6 +22,8 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -183,5 +185,26 @@ public class Utilities {
         context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                 Uri.fromFile(file)));
         return true;
+    }
+
+    public static String getWeightUnitStr(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPref.getString(SettingsFragment.UNIT_KEY, "lbs");
+    }
+
+    public static final double lbsPerKg = 2.20462;
+    public static double lbsToKgs(double lbs) {
+        return round(lbs / lbsPerKg, 1);
+    }
+    public static double kgsToLbs(double kgs) {
+        return round(kgs * lbsPerKg, 1);
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

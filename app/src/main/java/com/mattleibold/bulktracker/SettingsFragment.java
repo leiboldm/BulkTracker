@@ -21,6 +21,8 @@ import android.widget.TextView;
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    public static final String REMINDERS_KEY = "pref_reminders";
+    public static final String UNIT_KEY = "pref_unit";
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -34,7 +36,6 @@ public class SettingsFragment extends PreferenceFragment
         addPreferencesFromResource(R.layout.settings_layout);
     }
 
-    public static final String REMINDERS_KEY = "pref_reminders";
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         Log.d("BTLOG", "SharedPreference changed with key " + key);

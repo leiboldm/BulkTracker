@@ -79,8 +79,10 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    private Context mContext;
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     public void onCreate(SQLiteDatabase db) {
@@ -98,6 +100,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public boolean insertWeight(double weight, String date, int time, String comment) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+
+        // Save all weights in the database in pounds even if they're entered in kgs
+        if (Utilities.getWeightUnitStr(mContext).equals(mContext.getString(R.string.kgs))) {
+            weight = Utilities.kgsToLbs(weight);
+        }
         cv.put(WeightEntry.POUNDS_COLUMN_NAME, weight);
         cv.put(WeightEntry.DATE_COLUMN_NAME, date);
         cv.put(WeightEntry.TIME_COLUMN_NAME, time);
@@ -143,17 +150,23 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private WeightEntry makeWeight(Cursor res) {
-        double pounds = res.getDouble(res.getColumnIndex(WeightEntry.POUNDS_COLUMN_NAME));
+        double weight = res.getDouble(res.getColumnIndex(WeightEntry.POUNDS_COLUMN_NAME));
+        if (Utilities.getWeightUnitStr(mContext).equals(mContext.getString(R.string.kgs))) {
+            weight = Utilities.lbsToKgs(weight);
+        }
         String date = res.getString(res.getColumnIndex(WeightEntry.DATE_COLUMN_NAME));
         int time = res.getInt(res.getColumnIndex(WeightEntry.TIME_COLUMN_NAME));
         String comment = res.getString(res.getColumnIndex(WeightEntry.COMMENT_COLUMN_NAME));
         int id = res.getInt(res.getColumnIndex(WeightEntry.ID_COLUMN_NAME));
-        return new WeightEntry(pounds, date, time, comment, id);
+        return new WeightEntry(weight, date, time, comment, id);
     }
 
     public boolean insertProgressPicture(double weight, String date, int time, String filepath) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        if (Utilities.getWeightUnitStr(mContext).equals(mContext.getString(R.string.kgs))) {
+            weight = Utilities.kgsToLbs(weight);
+        }
         cv.put(ProgressPicture.POUNDS_COLUMN_NAME, weight);
         cv.put(ProgressPicture.DATE_COLUMN_NAME, date);
         cv.put(ProgressPicture.TIME_COLUMN_NAME, time);
@@ -181,11 +194,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     private ProgressPicture makeProgressPicture(Cursor res) {
-        double pounds = res.getDouble(res.getColumnIndex(ProgressPicture.POUNDS_COLUMN_NAME));
+        double weight = res.getDouble(res.getColumnIndex(ProgressPicture.POUNDS_COLUMN_NAME));
+        if (Utilities.getWeightUnitStr(mContext).equals(mContext.getString(R.string.kgs))) {
+            weight = Utilities.lbsToKgs(weight);
+        }
         String date = res.getString(res.getColumnIndex(ProgressPicture.DATE_COLUMN_NAME));
         int time = res.getInt(res.getColumnIndex(ProgressPicture.TIME_COLUMN_NAME));
         String filepath = res.getString(res.getColumnIndex(ProgressPicture.PATH_COLUMN_NAME));
         int id = res.getInt(res.getColumnIndex(ProgressPicture.ID_COLUMN_NAME));
-        return new ProgressPicture(pounds, date, time, filepath, id);
+        return new ProgressPicture(weight, date, time, filepath, id);
     }
 }

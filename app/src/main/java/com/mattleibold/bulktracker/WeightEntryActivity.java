@@ -81,9 +81,8 @@ public class WeightEntryActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //EditText weightET = (EditText) findViewById(R.id.weightValue);
-        //weightET.requestFocus();
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        TextView units = (TextView) findViewById(R.id.weightUnit);
+        units.setText(Utilities.getWeightUnitStr(this));
     }
 
     @Override

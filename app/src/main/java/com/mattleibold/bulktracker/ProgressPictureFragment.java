@@ -1,6 +1,7 @@
 package com.mattleibold.bulktracker;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class ProgressPictureFragment extends Fragment {
     public String mFilepath;
     public String mDate;
     public double mWeight;
+    public String mUnitStr;
 
     private View mRootView;
 
@@ -50,6 +52,9 @@ public class ProgressPictureFragment extends Fragment {
             mDate = getArguments().getString(ARG_DATE);
             mWeight = getArguments().getDouble(ARG_WEIGHT);
         }
+        Context context = getActivity();
+        if (context != null) mUnitStr = Utilities.getWeightUnitStr(context);
+        else mUnitStr = "";
     }
 
     @Override
@@ -59,7 +64,7 @@ public class ProgressPictureFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_progress_picture, container, false);
 
         TextView weightTextView = (TextView) mRootView.findViewById(R.id.weightText);
-        weightTextView.setText(mWeight + " lbs");
+        weightTextView.setText(mWeight + " " + mUnitStr);
 
         TextView dateTextView = (TextView) mRootView.findViewById(R.id.dateText);
         dateTextView.setText(mDate);

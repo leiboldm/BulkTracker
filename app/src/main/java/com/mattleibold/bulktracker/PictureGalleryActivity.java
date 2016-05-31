@@ -22,14 +22,33 @@ public class PictureGalleryActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_gallery);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_picture_gallery, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Utilities.handleOptionsItemSelected(this, id);
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         DBHelper db = new DBHelper(getApplicationContext());
         Vector<ProgressPicture> pics = db.getAllProgressPictures();
         Vector<ThumbnailAdapter.ThumbnailData> thumbnails = new Vector< >();
         Log.d("BTLOG", "Thumbnail count: " + thumbnails.size());
+        String unitStr = Utilities.getWeightUnitStr(this);
         for (ProgressPicture pic : pics) {
             String date = pic.date;
-            String weight = pic.weight + " lbs";
+            String weight = pic.weight + " " + unitStr;
             String filepath = pic.filepath;
             File picFile = new File(filepath);
 
@@ -57,19 +76,5 @@ public class PictureGalleryActivity extends ActionBarActivity {
                 startActivity(fullPictureIntent);
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_picture_gallery, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        Utilities.handleOptionsItemSelected(this, id);
-
-        return super.onOptionsItemSelected(item);
     }
 }
