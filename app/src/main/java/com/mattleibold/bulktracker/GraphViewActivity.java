@@ -1,12 +1,17 @@
 package com.mattleibold.bulktracker;
 
 import android.graphics.Color;
+import android.graphics.Point;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -18,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.exp;
@@ -56,9 +62,8 @@ public class GraphViewActivity extends ActionBarActivity {
 
     private void drawChart() {
         GraphView chart = new GraphView(this);
-        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.graphViewMainLayout);
+        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.graphViewInnerLayout);
         mainLayout.removeAllViews();
-        mainLayout.addView(chart);
         DBHelper db = new DBHelper(getApplicationContext());
         ArrayList<DBHelper.WeightEntry> weights = db.getAllWeights();
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
@@ -98,6 +103,24 @@ public class GraphViewActivity extends ActionBarActivity {
         chart.addSeries(locallyWeightedRegressionSeries);
         chart.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.BOTTOM);
         chart.getLegendRenderer().setVisible(true);
+
+        double lastWeekRegression = computeLinearRegression(weights, 7);
+        double lastMonthRegression = computeLinearRegression(weights, 30);
+        TextView weekRegressionView = new TextView(this);
+        weekRegressionView.setText(getString(R.string.last_week_regression) + " " + String.format("%.2f", lastWeekRegression) + " lbs/day");
+        TextView monthRegressionView = new TextView(this);
+        monthRegressionView.setText(getString(R.string.last_month_regression) + " " + String.format("%.2f", lastMonthRegression) + " lbs/day");
+        mainLayout.addView(chart);
+        Log.d("BTLOG", "mainLayout height = " + mainLayout.getHeight());
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        chart.getLayoutParams().height = height - 500;
+        chart.getLayoutParams().width = width - 100;
+        mainLayout.addView(weekRegressionView);
+        mainLayout.addView(monthRegressionView);
     }
 
     private class TimeDiffWE {
@@ -117,6 +140,32 @@ public class GraphViewActivity extends ActionBarActivity {
         DBHelper.WeightEntry averageWeightEntry = new DBHelper.WeightEntry(avgWeight,
                 minPoint.date,  avgTime, "");
         array.add(averageWeightEntry);
+    }
+
+    private double computeLinearRegression(ArrayList<DBHelper.WeightEntry> weights, int daysAgo) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        long currentTime = calendar.getTime().getTime();
+        int startTime = (int)(currentTime / 1000) - (daysAgo * 24 * 60 * 60);
+        int startIndex = 0;
+        for (int i = 0; i < weights.size(); i++) {
+            if (weights.get(i).makeTimestamp() >= startTime) {
+                startIndex = i;
+                break;
+            }
+        }
+        Log.d("BTLOG", "weights.size() = " + weights.size());
+        Log.d("BTLOG", "startIndex = " + startIndex);
+        double[] x = new double[weights.size() - startIndex];
+        double[] y = new double[weights.size() - startIndex];
+        for (int i = startIndex; i < weights.size(); i++) {
+            x[i - startIndex] = weights.get(i).makeTimestamp() - startTime;
+            y[i - startIndex] = weights.get(i).weight;
+        }
+        LinearRegression regressor = new LinearRegression(x, y);
+        Log.d("BTLOG", "regressor.slope() = " + regressor.slope());
+        Log.d("BTLOG", "regressor.intercept() = " + regressor.intercept());
+        double weightChangePerDay = regressor.slope() * (24 * 60 * 60);
+        return weightChangePerDay;
     }
 
     // computes a locally weighted regression for the raw weight data

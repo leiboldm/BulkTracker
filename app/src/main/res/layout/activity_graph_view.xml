@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -7,4 +7,13 @@
     android:id="@+id/graphViewMainLayout"
     tools:context="com.mattleibold.bulktracker.GraphViewActivity">
 
-</RelativeLayout>
+    <ScrollView android:layout_height="match_parent" android:layout_width="fill_parent">
+        <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent" android:orientation="vertical"
+            android:id="@+id/graphViewInnerLayout" xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" tools:context="com.mattleibold.bulktracker.GraphViewActivity">
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

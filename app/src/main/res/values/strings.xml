@@ -37,6 +37,8 @@
     <string name="title_activity_graph_view">Weight history chart</string>
     <string name="raw_data">Raw data</string>
     <string name="smoothed_data">Smoothed data</string>
+    <string name="last_week_regression">Weight change per day for the last week:</string>
+    <string name="last_month_regression">Weight change per day for the last month:</string>
 
     <string name="title_activity_picture_gallery">Picture Gallery</string>
     <string name="progress_pictures">Progress pictures</string>
